@@ -8,12 +8,12 @@ variable "corelight_sensor_ami_id" {
   type        = string
 }
 
-variable "management_subnet_id" {
+variable "monitoring_subnet_id" {
   description = ""
   type        = string
 }
 
-variable "fleet_subnet_id" {
+variable "management_subnet_id" {
   description = ""
   type        = string
 }
@@ -39,17 +39,25 @@ variable "license_key" {
   type        = string
 }
 
-variable "asg_subnet_cidr" {
+# Variables with Defaults
+variable "fleet_subnet_id" {
   description = ""
   type        = string
+  default     = ""
 }
 
-# Variables with Defaults
-variable "asg_load_balancer_name" {
+variable "sensor_asg_auto_scale_policy_name" {
+  description = ""
+  type        = string
+  default     = "corelight-sensor-asg-policy"
+}
+
+variable "sensor_asg_load_balancer_name" {
   description = ""
   type        = string
   default     = "corelight-sensor-lb"
 }
+
 variable "sensor_asg_name" {
   description = ""
   type        = string
@@ -87,7 +95,7 @@ variable "sensor_launch_template_instance_type" {
   default     = "c5.2xlarge"
 }
 
-variable "alb_health_check_target_group_name" {
+variable "lb_health_check_target_group_name" {
   description = ""
   type        = string
   default     = "corelight-sensor-gwlb-tg"

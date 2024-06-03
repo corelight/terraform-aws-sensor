@@ -2,12 +2,17 @@ data "aws_vpc" "provided" {
   id = var.vpc_id
 }
 
+data "aws_subnet" "monitoring_subnet" {
+  id = var.monitoring_subnet_id
+}
+
 data "aws_subnet" "management_subnet" {
   id = var.management_subnet_id
 }
 
 data "aws_subnet" "fleet_subnet" {
-  id = var.fleet_subnet_id
+  count = var.fleet_subnet_id == "" ? 0 : 1
+  id    = var.fleet_subnet_id
 }
 
 data "cloudinit_config" "config" {
