@@ -1,7 +1,7 @@
 resource "aws_instance" "bastion" {
   ami           = var.ami_id
   instance_type = var.instance_type
-  key_name      = var.key_pair_name
+  key_name      = var.bastion_key_pair_name
 
   network_interface {
     device_index         = 0
@@ -38,8 +38,12 @@ resource "aws_security_group" "allow_ssh" {
 resource "aws_network_interface" "bastion_nic" {
   subnet_id       = var.subnet_id
   security_groups = [aws_security_group.allow_ssh.id]
+
+  tags = var.tags
 }
 
 resource "aws_eip" "bastion_public_ip" {
   network_interface = aws_network_interface.bastion_nic.id
+
+  tags = var.tags
 }

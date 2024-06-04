@@ -1,30 +1,30 @@
 variable "vpc_id" {
-  description = ""
+  description = "The ID of the VPC where resources will be deployed"
   type        = string
 }
 
 variable "corelight_sensor_ami_id" {
-  description = ""
+  description = "The AMI ID of the Corelight sensor. Request access to the AMI from your account executive"
   type        = string
 }
 
 variable "monitoring_subnet_id" {
-  description = ""
+  description = "The ID of the subnet where monitor traffic will be available"
   type        = string
 }
 
 variable "management_subnet_id" {
-  description = ""
+  description = "The ID of the subnet used to SSH / manage Corelight sensors"
   type        = string
 }
 
 variable "aws_key_pair_name" {
-  description = ""
+  description = "The name of the AWS key pair that will be used to access the sensor instances in the auto-scale group"
   type        = string
 }
 
 variable "auto_scaling_availability_zones" {
-  description = ""
+  description = "The availability zones the auto scale group will use"
   type        = list(string)
 }
 
@@ -36,79 +36,74 @@ variable "sensor_api_password" {
 
 variable "license_key" {
   description = "Your Corelight sensor license key"
+  sensitive   = true
   type        = string
 }
 
 # Variables with Defaults
 variable "fleet_subnet_id" {
-  description = ""
+  description = "(optional) The ID of the subnet where Fleet is deployed. Providing this will allow Fleet to communicate with the sensors"
   type        = string
   default     = ""
 }
 
 variable "sensor_asg_auto_scale_policy_name" {
-  description = ""
+  description = "The name of the auto-scale group policy"
   type        = string
   default     = "corelight-sensor-asg-policy"
 }
 
 variable "sensor_asg_load_balancer_name" {
-  description = ""
+  description = "The name of the load balancer which fronts the auto-scale group"
   type        = string
   default     = "corelight-sensor-lb"
 }
 
 variable "sensor_asg_name" {
-  description = ""
+  description = "The name of the Corelight sensor auto-scale group"
   type        = string
   default     = "corelight-sensor"
 }
 
-variable "sensor_asg_subnet_name" {
-  description = ""
-  type        = string
-  default     = "corelight-sensor-asg-subnet"
-}
-
 variable "monitoring_nic_name" {
-  description = ""
+  description = "The name of the Network Interface used for monitoring GENEVE traffic to the sensor"
   type        = string
   default     = "corelight-mon-nic"
 }
 
 variable "management_nic_name" {
-  description = ""
+  description = "The name of the Network Interface used for management of the sensor - SSH/HTTPS"
   type        = string
   default     = "corelight-mgmt-nic"
 }
 
 
 variable "sensor_launch_template_name" {
-  description = ""
+  description = "The name of the launch template used by the auto-scale group"
   type        = string
   default     = "corelight-sensor-launch-template"
 }
 
 variable "sensor_launch_template_instance_type" {
-  description = ""
+  description = "The instance type the auto-scale group will use for each instance"
   type        = string
   default     = "c5.2xlarge"
 }
 
 variable "lb_health_check_target_group_name" {
-  description = ""
+  description = "The name of the health check target group which determines if the sensor in the ASG comes up and is ready to accept traffic"
   type        = string
   default     = "corelight-sensor-gwlb-tg"
 }
 
 variable "enrichment_bucket_name" {
-  description = ""
+  description = "(optional) The name of the s3 bucket where cloud enrichment data is being stored"
   type        = string
   default     = ""
 }
 
 variable "enrichment_bucket_region" {
-  description = ""
+  description = "(optional) The region of the cloud enrichment s3 bucket"
   type        = string
   default     = ""
 }
