@@ -23,15 +23,15 @@ variable "aws_key_pair_name" {
   type        = string
 }
 
-variable "auto_scaling_availability_zones" {
-  description = "The availability zones the auto scale group will use"
-  type        = list(string)
+variable "auto_scaling_availability_zone" {
+  description = "The availability zone the auto scale group will use"
+  type        = string
 }
 
-variable "sensor_api_password" {
-  description = "The password that should be used for the Corelight sensor API"
-  sensitive   = true
+variable "community_string" {
+  description = "the community string (api string) often times referenced by Fleet"
   type        = string
+  sensitive   = true
 }
 
 variable "license_key" {
@@ -41,12 +41,6 @@ variable "license_key" {
 }
 
 # Variables with Defaults
-variable "fleet_subnet_id" {
-  description = "(optional) The ID of the subnet where Fleet is deployed. Providing this will allow Fleet to communicate with the sensors"
-  type        = string
-  default     = ""
-}
-
 variable "sensor_asg_auto_scale_policy_name" {
   description = "The name of the auto-scale group policy"
   type        = string
@@ -109,7 +103,7 @@ variable "enrichment_bucket_region" {
 }
 
 variable "tags" {
-  description = "Any tags that should be applied to resources deployed by the module"
+  description = "(optional) Any tags that should be applied to resources deployed by the module"
   type        = object({})
   default     = {}
 }

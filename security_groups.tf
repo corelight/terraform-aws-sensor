@@ -35,14 +35,3 @@ resource "aws_security_group" "management" {
 
   tags = var.tags
 }
-
-resource "aws_security_group_rule" "fleet_rule" {
-  count = var.fleet_subnet_id == "" ? 0 : 1
-
-  from_port         = 443
-  to_port           = 443
-  protocol          = "tcp"
-  security_group_id = aws_security_group.management.id
-  cidr_blocks       = [data.aws_subnet.fleet_subnet[0].cidr_block]
-  type              = "ingress"
-}

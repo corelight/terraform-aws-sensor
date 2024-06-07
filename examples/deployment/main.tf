@@ -20,7 +20,7 @@ module "sensor" {
   license_key                     = local.license
   management_subnet_id            = local.management_subnet
   monitoring_subnet_id            = local.monitoring_subnet
-  sensor_api_password             = "<password for the sensor api>"
+  community_string                = "<password for the sensor api>"
   vpc_id                          = local.vpc_id
 
   tags = local.tags

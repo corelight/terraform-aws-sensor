@@ -18,11 +18,8 @@ module "sensor" {
   license_key = "<your Corelight sensor license key>"
   management_subnet_id = "<management subnet>"
   monitoring_subnet_id = "<monitoring subnet>"
-  sensor_api_password = "<password for the sensor api>"
+  community_string = "<password for the sensor api>"
   vpc_id = "<vpc where the sensor auto scale group is deployed>"
-  
-  # (Optional) Fleet Subnet
-  fleet_subnet_id = "<subnet fleet is deployed in>"
   
   # (Optional) Enrichment Bucket - ASG should have an instance 
   # profile when using cloud enrichment

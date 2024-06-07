@@ -16,7 +16,7 @@ resource "aws_launch_template" "sensor_launch_template" {
     network_interface_id = aws_network_interface.management_nic.id
   }
 
-  user_data = var.enrichment_bucket_name == "" ? data.cloudinit_config.config.rendered : data.cloudinit_config.config_with_enrichment.rendered
+  user_data = module.sensor_config.cloudinit_config.rendered
 
   tags = var.tags
 }
