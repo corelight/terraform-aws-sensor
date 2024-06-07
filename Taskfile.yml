@@ -1,0 +1,13 @@
+---
+version: "3"
+
+tasks:
+  fmt:
+    desc: Reformat your configuration in the standard style
+    cmds:
+      - terraform fmt -recursive .
+
+  fmt:check:
+    desc: Check if the input is formatted
+    cmds:
+      - terraform fmt -recursive -check -diff .
