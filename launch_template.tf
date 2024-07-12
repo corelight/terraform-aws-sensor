@@ -6,32 +6,21 @@ resource "aws_launch_template" "sensor_launch_template" {
   key_name      = var.aws_key_pair_name
   ebs_optimized = false
 
-  network_interfaces {
-    device_index         = 0
-    network_interface_id = aws_network_interface.monitoring_nic.id
+  dynamic "iam_instance_profile" {
+    for_each = var.enrichment_iam_role_arn == "" ? toset([]) : toset([1])
+
+    content {
+      arn = var.enrichment_iam_role_arn
+    }
   }
 
   network_interfaces {
-    device_index         = 1
-    network_interface_id = aws_network_interface.management_nic.id
+    subnet_id             = var.monitoring_subnet_id
+    security_groups       = [aws_security_group.monitoring.id]
+    delete_on_termination = true
   }
 
   user_data = module.sensor_config.cloudinit_config.rendered
 
   tags = var.tags
 }
-
-resource "aws_network_interface" "monitoring_nic" {
-  subnet_id       = data.aws_subnet.monitoring_subnet.id
-  security_groups = [aws_security_group.monitoring.id]
-
-  tags = merge(var.tags, { name : var.monitoring_nic_name })
-}
-
-resource "aws_network_interface" "management_nic" {
-  subnet_id       = data.aws_subnet.management_subnet.id
-  security_groups = [aws_security_group.management.id]
-
-  tags = merge(var.tags, { name : var.management_nic_name })
-}
-

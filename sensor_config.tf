@@ -3,8 +3,8 @@ module "sensor_config" {
 
   sensor_license                   = var.license_key
   fleet_community_string           = var.community_string
-  sensor_management_interface_name = "eth0"
-  sensor_monitoring_interface_name = "eth1"
+  sensor_management_interface_name = "eth1"
+  sensor_monitoring_interface_name = "eth0"
   base64_encode_config             = true
   enrichment_enabled               = var.enrichment_bucket_name != "" && var.enrichment_bucket_region != ""
   enrichment_bucket_name           = var.enrichment_bucket_name

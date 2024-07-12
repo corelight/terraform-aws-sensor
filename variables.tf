@@ -23,9 +23,9 @@ variable "aws_key_pair_name" {
   type        = string
 }
 
-variable "auto_scaling_availability_zone" {
-  description = "The availability zone the auto scale group will use"
-  type        = string
+variable "availability_zones" {
+  description = "The availability zone the auto scale group and load balancer will use"
+  type        = list(string)
 }
 
 variable "community_string" {
@@ -90,6 +90,30 @@ variable "lb_health_check_target_group_name" {
   default     = "corelight-sensor-gwlb-tg"
 }
 
+variable "sensor_monitoring_security_group_name" {
+  description = "Name of the security group used to allow health check and GENEVE traffic to the sensor"
+  type        = string
+  default     = "corelight-sensor-monitoring"
+}
+
+variable "sensor_monitoring_security_group_description" {
+  description = "Description of the security group used to allow access to the monitoring NIC"
+  type        = string
+  default     = "Security group for the sensor which allows health check and GENEVE traffic inbound"
+}
+
+variable "sensor_management_security_group_name" {
+  description = "Name of the security group used to allow access to the monitoring NIC"
+  type        = string
+  default     = "corelight-sensor-management"
+}
+
+variable "sensor_management_security_group_description" {
+  description = "Name of the security group used to allow SSH access to the sensor"
+  type        = string
+  default     = "Security group for the sensor which allows ssh from the DMZ / Bastion"
+}
+
 variable "enrichment_bucket_name" {
   description = "(optional) The name of the s3 bucket where cloud enrichment data is being stored"
   type        = string
@@ -100,6 +124,48 @@ variable "enrichment_bucket_region" {
   description = "(optional) The region of the cloud enrichment s3 bucket"
   type        = string
   default     = ""
+}
+
+variable "enrichment_iam_role_arn" {
+  description = "(optional) When configuring enrichment, an instance profile must be added granting the ASG EC2 nodes access to read from the bucket"
+  type        = string
+  default     = ""
+}
+
+variable "eventbridge_lifecycle_rule_name" {
+  description = "Auto Scale Group EventBridge rule name"
+  type        = string
+  default     = "corelight-asg-sensor-lifecycle-notification"
+}
+
+variable "lambda_function_name" {
+  description = "Name of the Multi-ENI lambda function"
+  type        = string
+  default     = "corelight-asg-sensor-nic-manager"
+}
+
+variable "iam_lambda_role_name" {
+  description = "The name of the Multi-ENI lambda role"
+  type        = string
+  default     = "corelight-asg-sensor-nic-manager-lambda-role"
+}
+
+variable "cloudwatch_log_group_prefix" {
+  description = "The cloudwatch string prepended to the cloud watch log group name"
+  type        = string
+  default     = "/aws/lambda"
+}
+
+variable "cloudwatch_log_group_retention" {
+  description = "The Lambda log group retention in days"
+  type        = number
+  default     = 3
+}
+
+variable "asg_lifecycle_hook_name" {
+  description = "name of the lifecycle hook triggered when new instances are launched"
+  type        = string
+  default     = "scaling-up"
 }
 
 variable "tags" {

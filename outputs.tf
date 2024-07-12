@@ -14,14 +14,6 @@ output "launch_template_id" {
   value = aws_launch_template.sensor_launch_template.id
 }
 
-output "auto_scale_group_mgmt_nic_id" {
-  value = aws_network_interface.management_nic.id
-}
-
-output "auto_scale_group_mon_nic_id" {
-  value = aws_network_interface.monitoring_nic.id
-}
-
 output "load_balancer_id" {
   value = aws_lb.sensor_lb.id
 }
