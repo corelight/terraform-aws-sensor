@@ -139,15 +139,21 @@ variable "eventbridge_lifecycle_rule_name" {
 }
 
 variable "lambda_function_name" {
-  description = "Name of the Multi-ENI lambda function"
+  description = "Name of the ENI management lambda function"
   type        = string
   default     = "corelight-asg-sensor-nic-manager"
 }
 
 variable "iam_lambda_role_name" {
-  description = "The name of the Multi-ENI lambda role"
+  description = "The name of the ENI management lambda role"
   type        = string
   default     = "corelight-asg-sensor-nic-manager-lambda-role"
+}
+
+variable "iam_lambda_policy_name" {
+  description = "Name of the policy granting permission to the ENI management lambda"
+  type        = string
+  default     = "corelight-asg-sensor-nic-manager-lambda-policy"
 }
 
 variable "cloudwatch_log_group_prefix" {

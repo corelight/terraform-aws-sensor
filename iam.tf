@@ -5,8 +5,11 @@ data "aws_iam_policy_document" "multi_eni_lambda_policy" {
       "logs:CreateLogStream",
       "logs:PutLogEvents"
     ]
-    resources = ["${aws_cloudwatch_log_group.log_group.arn}:*"]
+    resources = [
+      "${aws_cloudwatch_log_group.log_group.arn}:*"
+    ]
   }
+
   statement {
     effect = "Allow"
     actions = [
@@ -23,7 +26,24 @@ data "aws_iam_policy_document" "multi_eni_lambda_policy" {
     actions = [
       "autoscaling:CompleteLifecycleAction"
     ]
-    resources = [aws_autoscaling_group.sensor_asg.arn]
+    resources = [
+      aws_autoscaling_group.sensor_asg.arn
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "ec2:AttachNetworkInterface",
+    ]
+    resources = [
+      "arn:aws:ec2:*:*:instance/*"
+    ]
+    condition {
+      test     = "StringEquals"
+      values   = [aws_autoscaling_group.sensor_asg.name]
+      variable = "aws:ResourceTag/aws:autoscaling:groupName"
+    }
   }
 
   statement {
@@ -34,7 +54,9 @@ data "aws_iam_policy_document" "multi_eni_lambda_policy" {
       "ec2:AttachNetworkInterface",
       "ec2:ModifyNetworkInterfaceAttribute",
     ]
-    resources = ["*"]
+    resources = [
+      "arn:aws:ec2:*:*:network-interface/*"
+    ]
     condition {
       test     = "StringEquals"
       values   = ["true"]
@@ -48,11 +70,16 @@ data "aws_iam_policy_document" "multi_eni_lambda_policy" {
       "ec2:CreateNetworkInterface",
       "ec2:CreateTags",
     ]
-    resources = ["*"]
+    resources = [
+      data.aws_subnet.management_subnet.arn,
+      aws_security_group.management.arn,
+      "arn:aws:ec2:*:*:network-interface/*"
+    ]
   }
 }
 
 resource "aws_iam_policy" "lambda_policy" {
+  name   = var.iam_lambda_policy_name
   policy = data.aws_iam_policy_document.multi_eni_lambda_policy.json
 
   tags = var.tags
