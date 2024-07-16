@@ -131,7 +131,7 @@ variable "enrichment_bucket_region" {
   default     = ""
 }
 
-variable "enrichment_iam_role_arn" {
+variable "enrichment_instance_profile_arn" {
   description = "(optional) When configuring enrichment, an instance profile must be added granting the ASG EC2 nodes access to read from the bucket"
   type        = string
   default     = ""
