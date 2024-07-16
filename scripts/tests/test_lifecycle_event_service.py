@@ -108,8 +108,35 @@ def test_process_event_should_raise_exception_and_delete_nic_if_attachment_fails
 
     delete_nic_mocker = mocker.patch.object(aws_client, "delete_interface", return_value=None)
 
-    with pytest.raises(botocore.exceptions.ClientError) as e:
+    with pytest.raises(botocore.exceptions.ClientError):
         LifecycleEventService(cfg, aws_client).process_event(event)
     assert create_nic_mocker.call_count == 1 and \
            attach_interface_mocker.call_count == 1 and \
            delete_nic_mocker.call_count == 1
+
+
+def test_process_event_should_raise_exception_and_delete_nic_if_attachment_modify_fails(mocker):
+    create_nic_mocker = mocker.patch.object(aws_client, "create_interface", return_value="eni-12345")
+    attach_mocker = mocker.patch.object(
+        aws_client,
+        "attach_interface",
+        return_value={"AttachmentId": "foo"}
+    )
+
+    modify_attachment_mocker = mocker.patch.object(
+        aws_client,
+        "modify_attachment_to_delete_on_termination",
+        side_effect=botocore.exceptions.ClientError(
+            error_response={"Error": {"Code": "fubar", "Message": "error"}},
+            operation_name="modify_network_interface_attribute")
+    )
+
+    delete_nic_mocker = mocker.patch.object(aws_client, "delete_interface", return_value=None)
+
+    with pytest.raises(botocore.exceptions.ClientError):
+        LifecycleEventService(cfg, aws_client).process_event(event)
+
+    assert create_nic_mocker.call_count == 1 and \
+        attach_mocker.call_count == 1 and \
+        modify_attachment_mocker.call_count == 1 and \
+        delete_nic_mocker.call_count == 1

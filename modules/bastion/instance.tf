@@ -10,6 +10,12 @@ resource "aws_instance" "bastion" {
 
   root_block_device {
     volume_size = var.os_disk_size
+    encrypted   = true
+  }
+
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens   = "required"
   }
 
   tags = merge(var.tags, { Name : var.bastion_instance_name })

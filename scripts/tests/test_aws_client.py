@@ -100,13 +100,44 @@ def test_attach_interface_should_return_aws_attachment_response(setup_client):
     ec2_stubber = setup_client[1]
     ec2_stubber.add_response(
         method="attach_network_interface",
-        service_response={"AttachmentId": "foo", "NetworkCardIndex": 123}
+        service_response={"AttachmentId": "foo", "NetworkCardIndex": 1}
     )
     ec2_stubber.activate()
 
     resp = aws_client.attach_interface("foo", "bar")
     assert resp["AttachmentId"] == "foo"
-    assert resp["NetworkCardIndex"] == 123
+    assert resp["NetworkCardIndex"] == 1
+
+
+def test_modify_attachment_to_delete_on_termination_should_raise_error_on_client_error(setup_client):
+    aws_client = setup_client[0]
+    ec2_stubber = setup_client[1]
+
+    ec2_stubber.add_client_error(
+        method="modify_network_interface_attribute",
+        http_status_code=403,
+        service_message="unauthorized"
+    )
+
+    ec2_stubber.activate()
+
+    with pytest.raises(botocore.exceptions.ClientError):
+        aws_client.modify_attachment_to_delete_on_termination("foo", "bar")
+
+
+def test_modify_attachment_to_delete_on_termination_should_return_nothing_on_success(setup_client):
+    aws_client = setup_client[0]
+    ec2_stubber = setup_client[1]
+
+    ec2_stubber.add_response(
+        method="modify_network_interface_attribute",
+        service_response={'ResponseMetadata': {'HTTPStatusCode': 200}}
+    )
+
+    ec2_stubber.activate()
+
+    resp = aws_client.modify_attachment_to_delete_on_termination("foo", "bar")
+    assert resp is None
 
 
 def test_complete_lifecycle_action_should_raise_error_on_client_error(setup_client):

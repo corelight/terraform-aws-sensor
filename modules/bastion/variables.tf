@@ -18,6 +18,11 @@ variable "bastion_key_pair_name" {
   type        = string
 }
 
+variable "public_ssh_allow_cidr_blocks" {
+  description = "The CIDR range that is allowed to SSH into the bastion host"
+  type        = list(string)
+}
+
 # Variables with Defaults
 variable "os_disk_size" {
   description = "The size of the bastion host primary disk"

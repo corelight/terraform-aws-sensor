@@ -85,6 +85,19 @@ class AwsClient:
                           f"{interface_id} to {instance_id}: {e}")
             raise e
 
+    def modify_attachment_to_delete_on_termination(self, attachment_id: str, network_interface_id: str):
+        try:
+            self.ec2_client.modify_network_interface_attribute(
+                Attachment={
+                    'AttachmentId': attachment_id,
+                    'DeleteOnTermination': True,
+                },
+                NetworkInterfaceId=network_interface_id
+            )
+        except botocore.exceptions.ClientError as e:
+            logging.error(f"[{e.response['Error']['Message']}] failed to modify network attachment on {attachment_id}: {e}")
+            raise e
+
     def delete_interface(self, interface_id: str) -> dict:
         try:
             return self.ec2_client.delete_network_interface(NetworkInterfaceId=interface_id)
@@ -124,9 +137,10 @@ class LifecycleEventService:
     def process_event(self, event: Ec2LifecycleHookEvent):
         network_interface_id = self.aws_client.create_interface(self.config.subnet_id, self.config.security_group_id)
         try:
-            self.aws_client.attach_interface(network_interface_id, event.instance_id)
+            attachment_resp = self.aws_client.attach_interface(network_interface_id, event.instance_id)
+            self.aws_client.modify_attachment_to_delete_on_termination(attachment_resp["AttachmentId"], network_interface_id)
         except Exception as e:
-            logging.info(f"unable to attach NIC {network_interface_id}: {e}")
+            logging.error(f"unable to attach NIC {network_interface_id}: {e}")
             logging.info(f"Deleting {network_interface_id}")
             self.aws_client.delete_interface(network_interface_id)
             raise e

@@ -32,6 +32,7 @@ resource "aws_security_group_rule" "public_network_egress_all" {
   to_port           = 0
   protocol          = "-1"
   security_group_id = aws_security_group.monitoring.id
+  description       = "Default egress rule"
   cidr_blocks       = ["0.0.0.0/0"]
 }
 

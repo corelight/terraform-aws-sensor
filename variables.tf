@@ -40,7 +40,12 @@ variable "license_key" {
   type        = string
 }
 
-# Variables with Defaults
+variable "asg_lambda_iam_role_arn" {
+  description = "ARN of the ASG lambda role created in the `iam/lambda` sub-module"
+  type        = string
+}
+
+# Variables with defaults
 variable "sensor_asg_auto_scale_policy_name" {
   description = "The name of the auto-scale group policy"
   type        = string
@@ -142,18 +147,6 @@ variable "lambda_function_name" {
   description = "Name of the ENI management lambda function"
   type        = string
   default     = "corelight-asg-sensor-nic-manager"
-}
-
-variable "iam_lambda_role_name" {
-  description = "The name of the ENI management lambda role"
-  type        = string
-  default     = "corelight-asg-sensor-nic-manager-lambda-role"
-}
-
-variable "iam_lambda_policy_name" {
-  description = "Name of the policy granting permission to the ENI management lambda"
-  type        = string
-  default     = "corelight-asg-sensor-nic-manager-lambda-policy"
 }
 
 variable "cloudwatch_log_group_prefix" {

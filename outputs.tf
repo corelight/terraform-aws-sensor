@@ -1,5 +1,9 @@
-output "auto_scale_group_id" {
-  value = aws_autoscaling_group.sensor_asg.id
+output "auto_scale_group_arn" {
+  value = aws_autoscaling_group.sensor_asg.arn
+}
+
+output "autoscaling_group_name" {
+  value = aws_autoscaling_group.sensor_asg.name
 }
 
 output "auto_scale_policy_id" {
@@ -30,7 +34,18 @@ output "monitoring_security_group_id" {
   value = aws_security_group.monitoring.id
 }
 
+output "monitoring_security_group_arn" {
+  value = aws_security_group.monitoring.arn
+}
+
 output "management_security_group_id" {
   value = aws_security_group.management.id
 }
 
+output "management_security_group_arn" {
+  value = aws_security_group.management.arn
+}
+
+output "cloudwatch_log_group_arn" {
+  value = aws_cloudwatch_log_group.log_group.arn
+}
