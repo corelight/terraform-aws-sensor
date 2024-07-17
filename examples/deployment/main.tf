@@ -11,6 +11,21 @@ locals {
   }
 }
 
+data "aws_subnet" "management" {
+  id = local.management_subnet
+}
+
+module "asg_lambda_role" {
+  source = "/Users/ryan/github/terraform-aws-sensor//modules/iam/lambda"
+
+  lambda_cloudwatch_log_group_arn = module.sensor.cloudwatch_log_group_arn
+  security_group_arn              = module.sensor.management_security_group_arn
+  sensor_autoscaling_group_name   = module.sensor.autoscaling_group_name
+  subnet_arn                      = data.aws_subnet.management.arn
+
+  tags = local.tags
+}
+
 module "sensor" {
   source = "github.com/corelight/terraform-aws-sensor"
 
@@ -22,6 +37,7 @@ module "sensor" {
   monitoring_subnet_id            = local.monitoring_subnet
   community_string                = "<password for the sensor api>"
   vpc_id                          = local.vpc_id
+  asg_lambda_iam_role_arn         = module.asg_lambda_role.role_arn
 
   tags = local.tags
 }
@@ -29,9 +45,11 @@ module "sensor" {
 module "bastion" {
   source = "github.com/corelight/terraform-aws-sensor//modules/bastion"
 
-  bastion_key_pair_name = "<AWS ssh key pair name for the bastion host>"
-  subnet_id             = "<subnet with public ssh access>"
-  vpc_id                = local.vpc_id
+  bastion_key_pair_name        = "<AWS ssh key pair name for the bastion host>"
+  subnet_id                    = data.aws_subnet.management.id
+  management_security_group_id = module.sensor.management_security_group_id
+  vpc_id                       = local.vpc_id
+  public_ssh_allow_cidr_blocks = ["0.0.0.0/0"]
 
   tags = local.tags
 }

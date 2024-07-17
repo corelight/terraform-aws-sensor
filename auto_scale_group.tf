@@ -9,12 +9,20 @@ resource "aws_autoscaling_group" "sensor_asg" {
     version = aws_launch_template.sensor_launch_template.latest_version
   }
 
-  availability_zones        = [var.auto_scaling_availability_zone]
+  availability_zones        = var.availability_zones
   target_group_arns         = [aws_lb_target_group.health_check.arn]
   health_check_type         = "EC2"
   health_check_grace_period = 300
   termination_policies      = ["OldestInstance"]
   protect_from_scale_in     = false
+}
+
+resource "aws_autoscaling_lifecycle_hook" "asg_scale_up_hook" {
+  autoscaling_group_name = aws_autoscaling_group.sensor_asg.name
+  lifecycle_transition   = "autoscaling:EC2_INSTANCE_LAUNCHING"
+  name                   = var.asg_lifecycle_hook_name
+  default_result         = "ABANDON"
+  heartbeat_timeout      = 300
 }
 
 resource "aws_autoscaling_policy" "sensor_autoscale_policy" {
