@@ -10,7 +10,7 @@ on:
 jobs:
   lambda-unit-tests:
     runs-on: ubuntu-latest
-    name: PyTest
+    name: Lambda Unit Tests
     env:
       LAMBDA_DIR: scripts
       TEST_RESULTS_DIR: test-results
@@ -28,6 +28,7 @@ jobs:
       - name: Run Tests
         run: |
           export AWS_DEFAULT_REGION=us-east-1
+          mkdir -p $TEST_RESULTS_DIR
           pytest "$LAMBDA_DIR/tests"
             --junitxml="$TEST_RESULTS_DIR/test-results.xml" 
             --cov="$LAMBDA_DIR/tests"
