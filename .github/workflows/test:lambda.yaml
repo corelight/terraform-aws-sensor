@@ -29,11 +29,16 @@ jobs:
         run: |
           export AWS_DEFAULT_REGION=us-east-1
           pytest "$LAMBDA_DIR/tests" \
-            --junitxml="$TEST_RESULTS_DIR/test-results.xml" \
+            --junitxml="$TEST_RESULTS_DIR/junit.xml" \
             --cov="$LAMBDA_DIR/tests" \
             --cov-report=xml:"$TEST_RESULTS_DIR/coverage.xml"
       - name: Upload pytest results
         uses: actions/upload-artifact@v4
         with:
           name: results
-          path: "$TEST_RESULTS_DIR/*"
+          path: "$TEST_RESULTS_DIR/coverage.xml"
+      - name: Upload pytest results
+        uses: actions/upload-artifact@v4
+        with:
+          name: results
+          path: "$TEST_RESULTS_DIR/junit.xml"
