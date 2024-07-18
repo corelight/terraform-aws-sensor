@@ -36,9 +36,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: results
-          path: "$TEST_RESULTS_DIR/coverage.xml"
-      - name: Upload pytest results
-        uses: actions/upload-artifact@v4
-        with:
-          name: results
-          path: "$TEST_RESULTS_DIR/junit.xml"
+          path: "$TEST_RESULTS_DIR"
+          retention-days: 1
