@@ -28,10 +28,9 @@ jobs:
       - name: Run Tests
         run: |
           export AWS_DEFAULT_REGION=us-east-1
-          mkdir -p "${{ github.workspace }}/$TEST_RESULTS_DIR"
-          pytest "$LAMBDA_DIR/tests" 
-            --junitxml="${{ github.workspace }}/$TEST_RESULTS_DIR/test-results.xml"
-            --cov="$LAMBDA_DIR/tests"
+          pytest "$LAMBDA_DIR/tests" \
+            --junitxml="${{ github.workspace }}/$TEST_RESULTS_DIR/test-results.xml" \
+            --cov="$LAMBDA_DIR/tests" \
             --cov-report=xml:"$TEST_RESULTS_DIR/coverage.xml"
       - name: Upload pytest results
         uses: actions/upload-artifact@v4
