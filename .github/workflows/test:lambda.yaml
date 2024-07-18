@@ -24,7 +24,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r "$LAMBDA_DIR/requirements.txt"
-          pip install -r "$TEST_RESULTS_DIR/test-requirements.txt"
+          pip install -r "$LAMBDA_DIR/tests/test-requirements.txt"
       - name: Run Tests
         run: |
           pytest "$LAMBDA_DIR/tests"
