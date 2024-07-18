@@ -36,5 +36,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: results
-          path: "$TEST_RESULTS_DIR"
+          path: "${{github.workspace}}/$TEST_RESULTS_DIR"
           retention-days: 1
