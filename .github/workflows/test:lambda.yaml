@@ -27,6 +27,7 @@ jobs:
           pip install -r "$LAMBDA_DIR/tests/test-requirements.txt"
       - name: Run Tests
         run: |
+          export AWS_DEFAULT_REGION=us-east-1
           pytest "$LAMBDA_DIR/tests"
             --doctest-modules 
             --junitxml="$TEST_RESULTS_DIR/test-results.xml" 
