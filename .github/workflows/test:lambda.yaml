@@ -29,7 +29,7 @@ jobs:
         run: |
           export AWS_DEFAULT_REGION=us-east-1
           pytest "$LAMBDA_DIR/tests"
-            --junitxml="terraform-aws-sensor/$TEST_RESULTS_DIR/test-results.xml" 
+            --junitxml="${{ github.workspace }}/$TEST_RESULTS_DIR/test-results.xml" 
             --cov="$LAMBDA_DIR/tests"
             --cov-report=xml:"$TEST_RESULTS_DIR/coverage.xml"
       - name: Upload pytest results
