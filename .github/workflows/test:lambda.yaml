@@ -1,5 +1,5 @@
 ---
-name: Python package
+name: Lambda Unit Tests
 
 on:
   pull_request:
