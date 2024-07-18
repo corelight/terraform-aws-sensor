@@ -16,7 +16,7 @@ data "aws_subnet" "management" {
 }
 
 module "asg_lambda_role" {
-  source = "/Users/ryan/github/terraform-aws-sensor//modules/iam/lambda"
+  source = "github.com/corelight/terraform-aws-sensor//modules/iam/lambda"
 
   lambda_cloudwatch_log_group_arn = module.sensor.cloudwatch_log_group_arn
   security_group_arn              = module.sensor.management_security_group_arn
