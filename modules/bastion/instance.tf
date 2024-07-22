@@ -29,6 +29,7 @@ resource "aws_network_interface" "bastion_nic" {
 }
 
 resource "aws_eip" "bastion_public_ip" {
+  instance          = aws_instance.bastion.id
   network_interface = aws_network_interface.bastion_nic.id
 
   tags = merge({ Name : "${var.bastion_instance_name}-public-ip" }, var.tags)

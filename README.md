@@ -15,7 +15,7 @@ module "asg_lambda_role" {
   source = "github.com/corelight/terraform-aws-sensor//modules/iam/lambda"
 
   lambda_cloudwatch_log_group_arn = module.sensor.cloudwatch_log_group_arn
-  sensor_autoscaling_group_name   = module.sensor.autoscaling_group_name
+  sensor_autoscaling_group_arn    = module.sensor.autoscaling_group_arn
   security_group_arn              = module.sensor.management_security_group_arn
   subnet_arn                      = data.aws_subnet.management.arn
 }

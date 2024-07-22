@@ -15,14 +15,20 @@ resource "aws_autoscaling_group" "sensor_asg" {
   health_check_grace_period = 300
   termination_policies      = ["OldestInstance"]
   protect_from_scale_in     = false
-}
+  wait_for_capacity_timeout = 0
 
-resource "aws_autoscaling_lifecycle_hook" "asg_scale_up_hook" {
-  autoscaling_group_name = aws_autoscaling_group.sensor_asg.name
-  lifecycle_transition   = "autoscaling:EC2_INSTANCE_LAUNCHING"
-  name                   = var.asg_lifecycle_hook_name
-  default_result         = "ABANDON"
-  heartbeat_timeout      = 300
+  initial_lifecycle_hook {
+    lifecycle_transition = "autoscaling:EC2_INSTANCE_LAUNCHING"
+    name                 = var.asg_lifecycle_hook_name
+    default_result       = "ABANDON"
+    heartbeat_timeout    = 300
+  }
+
+  depends_on = [
+    aws_lambda_function.auto_scaling_lambda,
+    aws_cloudwatch_event_rule.asg_lifecycle_rule,
+    aws_cloudwatch_log_group.log_group,
+  ]
 }
 
 resource "aws_autoscaling_policy" "sensor_autoscale_policy" {

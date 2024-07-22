@@ -38,8 +38,8 @@ resource "aws_cloudwatch_event_rule" "asg_lifecycle_rule" {
     "source" : ["aws.autoscaling"],
     "detail-type" : ["EC2 Instance-launch Lifecycle Action"],
     "detail" : {
-      "AutoScalingGroupName" : [aws_autoscaling_group.sensor_asg.name],
-      "LifecycleHookName" : [aws_autoscaling_lifecycle_hook.asg_scale_up_hook.name]
+      "AutoScalingGroupName" : [var.sensor_asg_name],
+      "LifecycleHookName" : [var.asg_lifecycle_hook_name]
     }
   })
 
