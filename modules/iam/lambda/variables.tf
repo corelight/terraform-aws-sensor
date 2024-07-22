@@ -3,7 +3,7 @@ variable "lambda_cloudwatch_log_group_arn" {
   type        = string
 }
 
-variable "sensor_autoscaling_group_name" {
+variable "sensor_autoscaling_group_arn" {
   description = "ARN of the sensor EC2 autoscaling group of Corelight sensors"
   type        = string
 }

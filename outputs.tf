@@ -1,4 +1,4 @@
-output "auto_scale_group_arn" {
+output "autoscaling_group_arn" {
   value = aws_autoscaling_group.sensor_asg.arn
 }
 

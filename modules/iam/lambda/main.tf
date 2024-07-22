@@ -1,7 +1,3 @@
-data "aws_autoscaling_group" "asg" {
-  name = var.sensor_autoscaling_group_name
-}
-
 data "aws_iam_policy_document" "lambda_nic_manager_policy" {
   statement {
     effect = "Allow"
@@ -31,7 +27,7 @@ data "aws_iam_policy_document" "lambda_nic_manager_policy" {
       "autoscaling:CompleteLifecycleAction"
     ]
     resources = [
-      data.aws_autoscaling_group.asg.arn
+      var.sensor_autoscaling_group_arn
     ]
   }
 
@@ -46,7 +42,7 @@ data "aws_iam_policy_document" "lambda_nic_manager_policy" {
     ]
     condition {
       test     = "StringEquals"
-      values   = [data.aws_autoscaling_group.asg.name]
+      values   = [split("/", var.sensor_autoscaling_group_arn)[1]]
       variable = "aws:ResourceTag/aws:autoscaling:groupName"
     }
   }
