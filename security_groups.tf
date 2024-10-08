@@ -18,11 +18,11 @@ resource "aws_security_group_rule" "geneve_mirror_traffic_rule" {
 
 resource "aws_security_group_rule" "monitor_traffic_rule" {
   type              = "ingress"
-  from_port         = 443
-  to_port           = 443
+  from_port         = 41080
+  to_port           = 41080
   protocol          = "tcp"
   security_group_id = aws_security_group.monitoring.id
-  description       = "GWLB/NLB Health Check Port"
+  description       = "GWLB Health Check Port"
   cidr_blocks       = [data.aws_vpc.provided.cidr_block]
 }
 
