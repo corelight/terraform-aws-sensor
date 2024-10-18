@@ -9,6 +9,8 @@ locals {
     terraform : true,
     purpose : "Corelight"
   }
+  fleet_token = "b1cd099ff22ed8a41abc63929d1db126"
+  fleet_url   = "https://fleet.example.com:1443/fleet/v1/internal/softsensor/websocket"
 }
 
 data "aws_subnet" "management" {
@@ -38,6 +40,8 @@ module "sensor" {
   community_string                = "<password for the sensor api>"
   vpc_id                          = local.vpc_id
   asg_lambda_iam_role_arn         = module.asg_lambda_role.role_arn
+  fleet_token                     = local.fleet_token
+  fleet_url                       = local.fleet_url
 
   tags = local.tags
 }

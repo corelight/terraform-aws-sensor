@@ -172,3 +172,41 @@ variable "tags" {
   type        = object({})
   default     = {}
 }
+
+variable "fleet_token" {
+  type        = string
+  default     = ""
+  sensitive   = true
+  description = "(optional) the pairing token from the Fleet UI. Must be set if 'fleet_url' is provided"
+}
+
+variable "fleet_url" {
+  type        = string
+  default     = ""
+  description = "(optional) the URL of the fleet instance from the Fleet UI. Must be set if 'fleet_token' is provided"
+}
+
+variable "fleet_server_sslname" {
+  type        = string
+  default     = "1.broala.fleet.product.corelight.io"
+  description = "(optional) the SSL hostname for the fleet server"
+
+}
+
+variable "fleet_http_proxy" {
+  type        = string
+  default     = ""
+  description = "(optional) the proxy URL for HTTP traffic from the fleet"
+}
+
+variable "fleet_https_proxy" {
+  type        = string
+  default     = ""
+  description = "(optional) the proxy URL for HTTPS traffic from the fleet"
+}
+
+variable "fleet_no_proxy" {
+  type        = string
+  default     = ""
+  description = "(optional) hosts or domains to bypass the proxy for fleet traffic"
+}
