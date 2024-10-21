@@ -23,11 +23,11 @@ module "asg_lambda_role" {
 module "sensor" {
   source = "github.com/corelight/terraform-aws-sensor"
 
-  # Recommend deploying a sensor per availability zone. Multiple AZs can 
+  # Recommend deploying a sensor per availability zone. Multiple AZs can
   # be set but GWLB cross availability zone support is not recommended.
   auto_scaling_availability_zones = ["<availability zone>"]
   aws_key_pair_name = "<key pair name>"
-  
+
   # Request access to Corelight sensor AMI from you Account Executive
   corelight_sensor_ami_id = "<sensor AMI ID>"
   license_key = "<your Corelight sensor license key>"
@@ -36,13 +36,18 @@ module "sensor" {
   community_string = "<password for the sensor api>"
   vpc_id = "<vpc where the sensor autoscaling group is deployed>"
   asg_lambda_iam_role_arn = module.asg_lambda_role.role_arn
-  
-  # (Optional) ASG should have an instance profile when using 
+
+  # (Optional) ASG should have an instance profile when using
   # the cloud enrichment feature
   enrichment_bucket_name = "<cloud enrichment s3 bucket name>"
   enrichment_bucket_region = "<cloud enrichment s3 bucket region>"
   enrichment_instance_profile_arn = aws_iam_instance_profile.corelight_sensor.arn
+
+  # Optional - Fleet Manager
+  fleet_token = "<the pairing token from the Fleet UI>"
+  fleet_url   = "<the URL of the fleet instance from the Fleet UI>"
 }
+
 
 ### Optional resources for enrichment
 module "enrichment_sensor_role" {
