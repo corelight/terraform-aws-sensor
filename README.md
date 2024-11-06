@@ -1,4 +1,4 @@
-# terraform-aws-sensor
+[#](#) terraform-aws-sensor
 
 Terraform for Corelight's AWS Cloud Sensor Deployment.
 
@@ -66,10 +66,13 @@ resource "aws_iam_instance_profile" "corelight_sensor" {
 The variables for this module all have default values that can be overwritten
 to meet your naming and compliance standards.
 
-Deployment examples can be found [here](examples).
+Deployment examples can be found [here][].
+
+[here]: https://github.com/corelight/corelight-cloud/tree/main/terraform/aws-autoscaling-sensor
 
 ## License
 
 The project is licensed under the [MIT][] license.
 
 [MIT]: LICENSE
+
