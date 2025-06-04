@@ -1,0 +1,11 @@
+misconfiguration:
+  scanners:
+    - terraform
+  config:
+    terraform:
+      file_patterns:
+        - "*.tf"
+  severity:
+    - HIGH
+    - CRITICAL
+  ignore_unfixed: true
