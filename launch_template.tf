@@ -20,7 +20,9 @@ resource "aws_launch_template" "sensor_launch_template" {
     delete_on_termination = true
   }
 
-  
+  metadata_options {
+    http_tokens = "required"
+  }
 
   user_data = module.sensor_config.cloudinit_config.rendered
 
