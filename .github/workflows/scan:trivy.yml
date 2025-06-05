@@ -21,11 +21,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run Trivy vulnerability scanner in fs mode
         id: trivy
-        uses: aquasecurity/trivy-action@0.31
+        uses: aquasecurity/trivy-action@0.31.0
         with:
           scan-type: fs
           scan-ref: .
-          trivy-config: trivy.yml
+          trivy-config: scripts/trivy/trivy.yml
           exit-code: '1'        # fail the step (and job) on findings
 
       # Only for the scheduled nightly run, and only when Trivy failed
