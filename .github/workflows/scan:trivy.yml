@@ -30,7 +30,7 @@ jobs:
 
       # Only for the scheduled nightly run, and only when Trivy failed
       - name: Create (or update) GitHub Issue on failure
-        if: github.event_name == 'schedule' && failure()
+        if: failure()
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
