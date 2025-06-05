@@ -1,0 +1,70 @@
+name: Trivy Security Scan
+
+on:
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 3 * * *'   # Nightly at 03:00 UTC
+  workflow_dispatch:
+
+jobs:
+  trivy-scan:
+    name: Trivy Scan
+    runs-on: ubuntu-latest
+
+    # Needed so the job can open issues
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Trivy vulnerability scanner in fs mode
+        id: trivy
+        uses: aquasecurity/trivy-action@0.31
+        with:
+          scan-type: fs
+          scan-ref: .
+          trivy-config: trivy.yml
+          exit-code: '1'        # fail the step (and job) on findings
+
+      # Only for the scheduled nightly run, and only when Trivy failed
+      - name: Create (or update) GitHub Issue on failure
+        if: github.event_name == 'schedule' && failure()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const title = `⚠️ Trivy scan failed on ${context.ref}`;
+            const body  = `
+            **Trivy security scan detected HIGH/CRITICAL findings.**
+
+            *Workflow run:* ${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}
+
+            Please review the job logs and address the reported misconfigurations or secrets.
+            `;
+
+            // Check if an open issue with this exact title already exists
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner,
+              repo,
+              state: 'open',
+              labels: 'security,trivy',
+              per_page: 100
+            });
+
+            const existing = issues.find(i => i.title === title);
+
+            if (existing) {
+              console.log(`Existing issue found (#${existing.number}); nothing to do.`);
+            } else {
+              await github.rest.issues.create({
+                owner,
+                repo,
+                title,
+                body,
+                labels: ['security', 'trivy']
+              });
+              console.log('Created new issue for failed Trivy scan');
+            }

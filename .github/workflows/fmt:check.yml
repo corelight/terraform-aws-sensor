@@ -23,11 +23,4 @@ jobs:
           terraform_version: "1.8.2"
       - name: Terraform fmt
         run: task fmt:check
-      - name: Run Trivy vulnerability scanner in fs mode
-        uses: aquasecurity/trivy-action@0.31.0
-        with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          trivy-config: trivy.yml
-          exit-code: '1'
 

@@ -1,0 +1,19 @@
+scan:
+  security-checks:
+    - secret
+    - config
+
+ignorefile: scripts/trivy/.trivyignore.yml
+
+severity:
+  - HIGH
+  - CRITICAL
+
+misconfiguration:
+  scanners:
+    - terraform
+  config:
+    terraform:
+      file_patterns:
+        - "**/*.tf"
+  ignore_unfixed: true
