@@ -19,29 +19,33 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install & run Trivy scan (table output)
+      - name: Install & run Trivy scan
         id: trivy
         shell: bash
-        continue-on-error: true              # let later steps run on failure
         run: |
+          set -euo pipefail
           echo "🔧 Installing Trivy ..."
-          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
+          curl -sSfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
             | sudo sh -s -- -b /usr/local/bin
 
-          echo "Running Trivy scan ..."
+          echo "🚀 Running Trivy scan ..."
           trivy fs \
             --config scripts/trivy/trivy.yml \
+            --scanners misconfig,secret \
+            --severity HIGH,CRITICAL \
             --format table \
             --output trivy-report.txt \
             --exit-code 1 \
             .
 
           echo "==================== Trivy Report ===================="
-          if [[ -f trivy-report.txt ]]; then
+
+          if [[ -s trivy-report.txt ]]; then  
             cat trivy-report.txt
           else
-            echo "No report generated."
+            echo "✅  No HIGH/CRITICAL misconfigurations or secrets detected."
           fi
+
           echo "======================================================"
 
       - name: Create or update GitHub Issue on failure
