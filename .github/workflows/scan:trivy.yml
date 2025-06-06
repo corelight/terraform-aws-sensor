@@ -44,11 +44,7 @@ jobs:
           set -e                   # re-enable immediate exit for any later errors
 
           echo "==================== Trivy Report ===================="
-          if [[ -s trivy-report.txt ]]; then
-            cat trivy-report.txt
-          else
-            echo "✅  No HIGH/CRITICAL misconfigurations or secrets detected."
-          fi
+          cat trivy-report.txt
           echo "======================================================"
 
           exit $trivy_status
