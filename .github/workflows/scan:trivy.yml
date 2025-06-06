@@ -19,20 +19,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run Trivy vulnerability scanner (fs mode)
+      - name: Install & run Trivy scan (table output)
         id: trivy
-        uses: aquasecurity/trivy-action@0.31.0
-        with:
-          scan-type: fs
-          scan-ref: .
-          trivy-config: scripts/trivy/trivy.yml
-          format: table 
-          output: trivy-report.txt
-          exit-code: '1'
-
-      - name: Print Trivy report to log
-        if: always()                     # run even if previous step failed
+        shell: bash
+        continue-on-error: true              # let later steps run on failure
         run: |
+          echo "🔧 Installing Trivy ..."
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
+            | sudo sh -s -- -b /usr/local/bin
+
+          echo "Running Trivy scan ..."
+          trivy fs \
+            --config scripts/trivy/trivy.yml \
+            --format table \
+            --output trivy-report.txt \
+            --exit-code 1 \
+            .
+
           echo "==================== Trivy Report ===================="
           if [[ -f trivy-report.txt ]]; then
             cat trivy-report.txt
