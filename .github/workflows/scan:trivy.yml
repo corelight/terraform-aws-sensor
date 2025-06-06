@@ -26,9 +26,20 @@ jobs:
           scan-type: fs
           scan-ref: .
           trivy-config: scripts/trivy/trivy.yml
-          format: table          # -> nice human‑readable output
+          format: table 
           output: trivy-report.txt
-          exit-code: '1'         # fail step (and job) on HIGH/CRITICAL
+          exit-code: '1'
+
+      - name: Print Trivy report to log
+        if: always()                     # run even if previous step failed
+        run: |
+          echo "==================== Trivy Report ===================="
+          if [[ -f trivy-report.txt ]]; then
+            cat trivy-report.txt
+          else
+            echo "No report generated."
+          fi
+          echo "======================================================"
 
       - name: Create or update GitHub Issue on failure
         if: failure()
