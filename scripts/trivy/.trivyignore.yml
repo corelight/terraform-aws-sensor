@@ -1,2 +1,5 @@
 misconfigurations:
   - id: AVD-AWS-0104
+    statement: public egress traffic is allowed to the internet
+  - id: AVD-AWS-0130
+    statement: allow for legacy metadata service use
