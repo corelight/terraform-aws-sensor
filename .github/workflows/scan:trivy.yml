@@ -54,7 +54,7 @@ jobs:
           exit $trivy_status
 
       - name: Create or update GitHub Issue on failure
-        if: failure()
+        if: github.event_name == 'schedule' && github.ref == 'refs/heads/main' && failure()
         uses: actions/github-script@v7
         with:
           script: |
