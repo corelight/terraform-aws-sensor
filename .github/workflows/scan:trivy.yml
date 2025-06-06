@@ -24,11 +24,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+
           echo "🔧 Installing Trivy ..."
           curl -sSfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
             | sudo sh -s -- -b /usr/local/bin
 
-          echo "🚀 Running Trivy scan ..."
+          echo "Running Trivy scan ..."
+          # Temporarily allow a non-zero exit so we can print the report
+          set +e
           trivy fs \
             --config scripts/trivy/trivy.yml \
             --scanners misconfig,secret \
@@ -37,16 +40,18 @@ jobs:
             --output trivy-report.txt \
             --exit-code 1 \
             .
+          trivy_status=$?          # 0 = clean, 1 = HIGH/CRITICAL found
+          set -e                   # re-enable immediate exit for any later errors
 
           echo "==================== Trivy Report ===================="
-
-          if [[ -s trivy-report.txt ]]; then  
+          if [[ -s trivy-report.txt ]]; then
             cat trivy-report.txt
           else
             echo "✅  No HIGH/CRITICAL misconfigurations or secrets detected."
           fi
-
           echo "======================================================"
+
+          exit $trivy_status
 
       - name: Create or update GitHub Issue on failure
         if: failure()
