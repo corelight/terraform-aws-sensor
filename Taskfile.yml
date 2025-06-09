@@ -11,3 +11,8 @@ tasks:
     desc: Check if the input is formatted
     cmds:
       - terraform fmt -recursive -check -diff .
+
+  trivy:scan:
+    desc: Scan Terraform files with Trivy
+    cmds:
+      - trivy fs --config scripts/trivy/trivy.yml .
