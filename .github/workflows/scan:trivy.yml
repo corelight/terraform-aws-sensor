@@ -1,106 +1,22 @@
-name: Trivy Security Scan
+name: Trivy Terraform Scan
 
 on:
   pull_request:
     branches: [main]
   schedule:
-    - cron: '0 3 * * *'          # Nightly at 03:00 UTC
+    - cron: '0 3 * * *'          # Nightly at 03:00 UTC
   workflow_dispatch:
 
 jobs:
-  trivy-scan:
-    name: Trivy Scan
+  trivy:
     runs-on: ubuntu-latest
-
-    permissions:                 # allow issue / comment creation
+    
+    permissions:
       contents: read
       issues: write
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install & run Trivy scan
-        id: trivy
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          echo "Installing Trivy ..."
-          curl -sSfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
-            | sudo sh -s -- -b /usr/local/bin
-
-          echo "Running Trivy scan ..."
-          # Temporarily allow a non-zero exit so we can print the report
-          set +e
-          trivy fs \
-            --config scripts/trivy/trivy.yml \
-            --scanners misconfig,secret \
-            --severity HIGH,CRITICAL \
-            --format table \
-            --output trivy-report.txt \
-            --exit-code 1 \
-            .
-          trivy_status=$?          # 0 = clean, 1 = HIGH/CRITICAL found
-          set -e                   # re-enable immediate exit for any later errors
-
-          echo "==================== Trivy Report ===================="
-          cat trivy-report.txt
-          echo "======================================================"
-
-          exit $trivy_status
-
-      - name: Create or update GitHub Issue on failure
-        if: github.event_name == 'schedule' && github.ref == 'refs/heads/main' && failure()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs   = require('fs');
-            const { owner, repo } = context.repo;
-
-            // Read the Trivy table from the workspace
-            const report = fs.readFileSync('trivy-report.txt', 'utf8')
-                              .trim()
-                              .slice(0, 60000);  // safety cut-off (GitHub issue body limit 65535)
-
-            const title = `⚠️ Trivy scan failed on ${context.ref}`;
-            const body  = `
-            **Trivy security scan detected HIGH/CRITICAL findings.**
-
-            \`\`\`
-            ${report}
-            \`\`\`
-
-            _Workflow run:_ ${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}
-            `;
-
-            // Look for an open issue with exactly this title + labels
-            const { data: issues } = await github.rest.issues.listForRepo({
-              owner,
-              repo,
-              state: 'open',
-              labels: 'security,trivy',
-              per_page: 100
-            });
-
-            const existing = issues.find(i => i.title === title);
-
-            if (existing) {
-              // Append findings as a new comment
-              await github.rest.issues.createComment({
-                owner,
-                repo,
-                issue_number: existing.number,
-                body
-              });
-              console.log(`Appended scan results to existing issue (#${existing.number}).`);
-            } else {
-              // Create a fresh issue
-              await github.rest.issues.create({
-                owner,
-                repo,
-                title,
-                body,
-                labels: ['security', 'trivy']
-              });
-              console.log('Created new Trivy scan issue with findings.');
-            }
+      - name: Trivy scan
+        uses: corelight/shared-actions/trivy-terraform-scan@main 
