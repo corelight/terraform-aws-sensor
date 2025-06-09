@@ -23,3 +23,4 @@ jobs:
           terraform_version: "1.8.2"
       - name: Terraform fmt
         run: task fmt:check
+

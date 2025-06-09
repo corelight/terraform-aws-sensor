@@ -1,0 +1,22 @@
+name: Trivy Terraform Scan
+
+on:
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 3 * * *'          # Nightly at 03:00 UTC
+  workflow_dispatch:
+
+jobs:
+  trivy:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Trivy scan
+        uses: corelight/shared-actions/trivy-terraform-scan@main 
