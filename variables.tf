@@ -35,9 +35,15 @@ variable "community_string" {
 }
 
 variable "license_key" {
-  description = "Your Corelight sensor license key"
+  description = "Your Corelight sensor license key. Optional if fleet_url is configured."
   sensitive   = true
   type        = string
+  default     = ""
+
+  validation {
+    condition     = var.license_key != "" || var.fleet_url != ""
+    error_message = "Either license_key must be provided or fleet_url must be configured."
+  }
 }
 
 variable "asg_lambda_iam_role_arn" {
@@ -210,3 +216,4 @@ variable "fleet_no_proxy" {
   default     = ""
   description = "(optional) hosts or domains to bypass the proxy for fleet traffic"
 }
+
