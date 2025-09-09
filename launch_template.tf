@@ -7,10 +7,10 @@ resource "aws_launch_template" "sensor_launch_template" {
   ebs_optimized = false
 
   dynamic "iam_instance_profile" {
-    for_each = var.enrichment_instance_profile_arn == "" ? toset([]) : toset([1])
+    for_each = var.instance_profile_arn == "" ? toset([]) : toset([1])
 
     content {
-      arn = var.enrichment_instance_profile_arn
+      arn = var.instance_profile_arn
     }
   }
 
