@@ -34,6 +34,22 @@ variable "community_string" {
   sensitive   = true
 }
 
+variable "fleet_token" {
+  type        = string
+  sensitive   = true
+  description = "Pairing token from the Fleet UI. Must be set if 'fleet_url' is provided"
+}
+
+variable "fleet_url" {
+  type        = string
+  description = "URL of the fleet instance from the Fleet UI. Must be set if 'fleet_token' is provided"
+}
+
+variable "fleet_server_sslname" {
+  type        = string
+  description = "SSL hostname for the fleet server"
+}
+
 variable "license_key" {
   description = "Your Corelight sensor license key. Optional if fleet_url is configured."
   sensitive   = true
@@ -125,20 +141,8 @@ variable "sensor_management_security_group_description" {
   default     = "Security group for the sensor which allows ssh from the DMZ / Bastion"
 }
 
-variable "enrichment_bucket_name" {
-  description = "(optional) The name of the s3 bucket where cloud enrichment data is being stored"
-  type        = string
-  default     = ""
-}
-
-variable "enrichment_bucket_region" {
-  description = "(optional) The region of the cloud enrichment s3 bucket"
-  type        = string
-  default     = ""
-}
-
-variable "enrichment_instance_profile_arn" {
-  description = "(optional) When configuring enrichment, an instance profile must be added granting the ASG EC2 nodes access to read from the bucket"
+variable "instance_profile_arn" {
+  description = "(optional) Instance profile must be added granting cloud features access to AWS APIs"
   type        = string
   default     = ""
 }
@@ -177,26 +181,6 @@ variable "tags" {
   description = "(optional) Any tags that should be applied to resources deployed by the module"
   type        = object({})
   default     = {}
-}
-
-variable "fleet_token" {
-  type        = string
-  default     = ""
-  sensitive   = true
-  description = "(optional) the pairing token from the Fleet UI. Must be set if 'fleet_url' is provided"
-}
-
-variable "fleet_url" {
-  type        = string
-  default     = ""
-  description = "(optional) the URL of the fleet instance from the Fleet UI. Must be set if 'fleet_token' is provided"
-}
-
-variable "fleet_server_sslname" {
-  type        = string
-  default     = "1.broala.fleet.product.corelight.io"
-  description = "(optional) the SSL hostname for the fleet server"
-
 }
 
 variable "fleet_http_proxy" {
