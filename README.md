@@ -1,4 +1,4 @@
-[#](#) terraform-aws-sensor
+# terraform-aws-sensor
 
 Terraform for Corelight's AWS Cloud Sensor Deployment.
 
@@ -36,16 +36,10 @@ module "sensor" {
   community_string = "<password for the sensor api>"
   vpc_id = "<vpc where the sensor autoscaling group is deployed>"
   asg_lambda_iam_role_arn = module.asg_lambda_role.role_arn
-
-  # (Optional) ASG should have an instance profile when using
-  # the cloud enrichment feature
-  enrichment_bucket_name = "<cloud enrichment s3 bucket name>"
-  enrichment_bucket_region = "<cloud enrichment s3 bucket region>"
-  enrichment_instance_profile_arn = aws_iam_instance_profile.corelight_sensor.arn
-
-  # Optional - Fleet Manager
+  
   fleet_token = "<the pairing token from the Fleet UI>"
   fleet_url   = "<the URL of the fleet instance from the Fleet UI>"
+  fleet_server_sslname = "<the ssl name provided by Fleet>"
 }
 
 
