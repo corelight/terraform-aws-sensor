@@ -8,14 +8,14 @@ variable "corelight_sensor_ami_id" {
   type        = string
 }
 
-variable "monitoring_subnet_id" {
-  description = "The ID of the subnet where monitor traffic will be available"
-  type        = string
+variable "monitoring_subnet_ids" {
+  description = "List of subnet IDs where monitor traffic will be available, one per availability zone"
+  type        = list(string)
 }
 
-variable "management_subnet_id" {
-  description = "The ID of the subnet used to SSH / manage Corelight sensors"
-  type        = string
+variable "management_subnet_ids" {
+  description = "List of subnet IDs used to SSH / manage Corelight sensors, one per availability zone"
+  type        = list(string)
 }
 
 variable "aws_key_pair_name" {
@@ -71,38 +71,38 @@ variable "asg_lambda_iam_role_arn" {
 variable "sensor_asg_auto_scale_policy_name" {
   description = "The name of the auto-scale group policy"
   type        = string
-  default     = "corelight-sensor-asg-policy"
+  default     = "jfiola-corelight-sensor-asg-policy"
 }
 
 variable "sensor_asg_load_balancer_name" {
   description = "The name of the load balancer which fronts the auto-scale group"
   type        = string
-  default     = "corelight-sensor-lb"
+  default     = "jfiola-corelight-sensor-lb"
 }
 
 variable "sensor_asg_name" {
   description = "The name of the Corelight sensor auto-scale group"
   type        = string
-  default     = "corelight-sensor"
+  default     = "jfiola-corelight-sensor"
 }
 
 variable "monitoring_nic_name" {
   description = "The name of the Network Interface used for monitoring GENEVE traffic to the sensor"
   type        = string
-  default     = "corelight-mon-nic"
+  default     = "jfiola-corelight-mon-nic"
 }
 
 variable "management_nic_name" {
   description = "The name of the Network Interface used for management of the sensor - SSH/HTTPS"
   type        = string
-  default     = "corelight-mgmt-nic"
+  default     = "jfiola-corelight-mgmt-nic"
 }
 
 
 variable "sensor_launch_template_name" {
   description = "The name of the launch template used by the auto-scale group"
   type        = string
-  default     = "corelight-sensor-launch-template"
+  default     = "jfiola-corelight-sensor-launch-template"
 }
 
 variable "sensor_launch_template_instance_type" {
@@ -114,13 +114,13 @@ variable "sensor_launch_template_instance_type" {
 variable "lb_health_check_target_group_name" {
   description = "The name of the health check target group which determines if the sensor in the ASG comes up and is ready to accept traffic"
   type        = string
-  default     = "corelight-sensor-gwlb-tg"
+  default     = "jfiola-corelight-sensor-gwlb-tg"
 }
 
 variable "sensor_monitoring_security_group_name" {
   description = "Name of the security group used to allow health check and GENEVE traffic to the sensor"
   type        = string
-  default     = "corelight-sensor-monitoring"
+  default     = "jfiola-corelight-sensor-monitoring"
 }
 
 variable "sensor_monitoring_security_group_description" {
@@ -132,7 +132,7 @@ variable "sensor_monitoring_security_group_description" {
 variable "sensor_management_security_group_name" {
   description = "Name of the security group used to allow access to the monitoring NIC"
   type        = string
-  default     = "corelight-sensor-management"
+  default     = "jfiola-corelight-sensor-management"
 }
 
 variable "sensor_management_security_group_description" {
@@ -150,13 +150,13 @@ variable "instance_profile_arn" {
 variable "eventbridge_lifecycle_rule_name" {
   description = "Auto Scale Group EventBridge rule name"
   type        = string
-  default     = "corelight-asg-sensor-lifecycle-notification"
+  default     = "jfiola-corelight-asg-sensor-lifecycle-notification"
 }
 
 variable "lambda_function_name" {
   description = "Name of the ENI management lambda function"
   type        = string
-  default     = "corelight-asg-sensor-nic-manager"
+  default     = "jfiola-corelight-asg-sensor-nic-manager"
 }
 
 variable "cloudwatch_log_group_prefix" {

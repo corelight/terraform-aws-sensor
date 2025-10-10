@@ -9,7 +9,7 @@ resource "aws_autoscaling_group" "sensor_asg" {
     version = aws_launch_template.sensor_launch_template.latest_version
   }
 
-  availability_zones        = var.availability_zones
+  vpc_zone_identifier       = var.monitoring_subnet_ids
   target_group_arns         = [aws_lb_target_group.health_check.arn]
   health_check_type         = "EC2"
   health_check_grace_period = 300

@@ -15,7 +15,7 @@ resource "aws_launch_template" "sensor_launch_template" {
   }
 
   network_interfaces {
-    subnet_id             = var.monitoring_subnet_id
+    device_index          = 0
     security_groups       = [aws_security_group.monitoring.id]
     delete_on_termination = true
   }
