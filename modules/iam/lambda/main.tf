@@ -71,11 +71,13 @@ data "aws_iam_policy_document" "lambda_nic_manager_policy" {
       "ec2:CreateNetworkInterface",
       "ec2:CreateTags",
     ]
-    resources = [
-      var.subnet_arn,
-      var.security_group_arn,
-      "arn:aws:ec2:*:*:network-interface/*"
-    ]
+    resources = concat(
+      var.subnet_arns,
+      [
+        var.security_group_arn,
+        "arn:aws:ec2:*:*:network-interface/*"
+      ]
+    )
   }
 }
 

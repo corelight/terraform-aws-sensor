@@ -18,7 +18,7 @@ module "asg_lambda_role" {
   lambda_cloudwatch_log_group_arn = module.sensor.cloudwatch_log_group_arn
   sensor_autoscaling_group_arn    = module.sensor.autoscaling_group_arn
   security_group_arn              = module.sensor.management_security_group_arn
-  subnet_arn                      = values(data.aws_subnet.management)[0].arn
+  subnet_arns                     = [for subnet in data.aws_subnet.management : subnet.arn]
 }
 
 module "sensor" {
