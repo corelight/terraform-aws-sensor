@@ -14,8 +14,20 @@ resource "aws_launch_template" "sensor_launch_template" {
     }
   }
 
+  block_device_mappings {
+    device_name = '/dev/xvda'
+
+    ebs {
+      volume_size           = 100
+      volume_type           = "gp3"
+      encrypted             = var.kms_key_id == "" ? false : true
+      kms_key_id            = var.kms_key_id == "" ? null : var.kms_key_id
+      delete_on_termination = true
+    }
+  }
+
   network_interfaces {
-    subnet_id             = var.monitoring_subnet_id
+    device_index          = 0
     security_groups       = [aws_security_group.monitoring.id]
     delete_on_termination = true
   }
