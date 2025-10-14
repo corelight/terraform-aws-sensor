@@ -40,6 +40,9 @@ module "sensor" {
   fleet_token = "<the pairing token from the Fleet UI>"
   fleet_url   = "<the URL of the fleet instance from the Fleet UI>"
   fleet_server_sslname = "<the ssl name provided by Fleet>"
+
+  # optional KMS key, if set will encrpyt the EBS volumes launched by the auto scaler group
+  kms_key_id  = "<the ID of the KMS key used to encrypt the EBS volumes>"
 }
 
 
