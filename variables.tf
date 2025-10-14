@@ -8,6 +8,11 @@ variable "corelight_sensor_ami_id" {
   type        = string
 }
 
+variable "kms_key_id" {
+  description = "The KMS key ID to be used for EBS volume encryption for the auto-scale group instances"
+  type =      = string
+}
+
 variable "monitoring_subnet_id" {
   description = "The ID of the subnet where monitor traffic will be available"
   type        = string
