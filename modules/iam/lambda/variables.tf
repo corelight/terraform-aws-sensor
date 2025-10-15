@@ -8,9 +8,9 @@ variable "sensor_autoscaling_group_arn" {
   type        = string
 }
 
-variable "subnet_arn" {
-  description = "ARN of the subnet where new ENIs should be created (management)"
-  type        = string
+variable "subnet_arns" {
+  description = "ARNs of the subnets where new ENIs should be created (management), one per availability zone"
+  type        = list(string)
 }
 
 variable "security_group_arn" {

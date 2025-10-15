@@ -14,7 +14,7 @@ resource "aws_lambda_function" "auto_scaling_lambda" {
 
   environment {
     variables = {
-      TARGET_SUBNET            = var.management_subnet_id
+      TARGET_SUBNETS           = jsonencode({ for subnet in data.aws_subnet.management_subnets : subnet.availability_zone => subnet.id })
       TARGET_SECURITY_GROUP_ID = aws_security_group.management.id
     }
   }

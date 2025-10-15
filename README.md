@@ -8,7 +8,8 @@ Terraform for Corelight's AWS Cloud Sensor Deployment.
 ```terraform
 
 data "aws_subnet" "management" {
-  id = "<management subnet id>"
+  for_each = toset(["<management subnet id 1>", "<management subnet id 2>"])
+  id       = each.value
 }
 
 module "asg_lambda_role" {
@@ -17,26 +18,31 @@ module "asg_lambda_role" {
   lambda_cloudwatch_log_group_arn = module.sensor.cloudwatch_log_group_arn
   sensor_autoscaling_group_arn    = module.sensor.autoscaling_group_arn
   security_group_arn              = module.sensor.management_security_group_arn
-  subnet_arn                      = data.aws_subnet.management.arn
+  subnet_arns                     = [for subnet in data.aws_subnet.management : subnet.arn]
 }
 
 module "sensor" {
   source = "github.com/corelight/terraform-aws-sensor"
 
-  # Recommend deploying a sensor per availability zone. Multiple AZs can
-  # be set but GWLB cross availability zone support is not recommended.
-  auto_scaling_availability_zones = ["<availability zone>"]
+  # Multi-AZ support: provide one subnet per availability zone
+  # The ASG will automatically distribute instances across AZs
+  availability_zones = ["us-east-1a", "us-east-1b"]
   aws_key_pair_name = "<key pair name>"
 
   # Request access to Corelight sensor AMI from you Account Executive
   corelight_sensor_ami_id = "<sensor AMI ID>"
   license_key = "<your Corelight sensor license key>"
-  management_subnet_id = "<management subnet>"
-  monitoring_subnet_id = "<monitoring subnet>"
+
+  # Provide one management subnet per AZ (must match availability_zones order)
+  management_subnet_ids = ["<management subnet in us-east-1a>", "<management subnet in us-east-1b>"]
+
+  # Provide one monitoring subnet per AZ (must match availability_zones order)
+  monitoring_subnet_ids = ["<monitoring subnet in us-east-1a>", "<monitoring subnet in us-east-1b>"]
+
   community_string = "<password for the sensor api>"
   vpc_id = "<vpc where the sensor autoscaling group is deployed>"
   asg_lambda_iam_role_arn = module.asg_lambda_role.role_arn
-  
+
   fleet_token = "<the pairing token from the Fleet UI>"
   fleet_url   = "<the URL of the fleet instance from the Fleet UI>"
   fleet_server_sslname = "<the ssl name provided by Fleet>"

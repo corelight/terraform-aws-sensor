@@ -8,14 +8,14 @@ variable "corelight_sensor_ami_id" {
   type        = string
 }
 
-variable "monitoring_subnet_id" {
-  description = "The ID of the subnet where monitor traffic will be available"
-  type        = string
+variable "monitoring_subnet_ids" {
+  description = "List of subnet IDs where monitor traffic will be available, one per availability zone"
+  type        = list(string)
 }
 
-variable "management_subnet_id" {
-  description = "The ID of the subnet used to SSH / manage Corelight sensors"
-  type        = string
+variable "management_subnet_ids" {
+  description = "List of subnet IDs used to SSH / manage Corelight sensors, one per availability zone"
+  type        = list(string)
 }
 
 variable "aws_key_pair_name" {
