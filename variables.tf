@@ -50,6 +50,12 @@ variable "fleet_server_sslname" {
   description = "SSL hostname for the fleet server"
 }
 
+variable "kms_key_id" {
+  description = "The KMS key ID to be used for EBS volume encryption for the auto-scale group instances"
+  type        = string
+  default     = null
+}
+
 variable "license_key" {
   description = "Your Corelight sensor license key. Optional if fleet_url is configured."
   sensitive   = true
@@ -200,4 +206,3 @@ variable "fleet_no_proxy" {
   default     = ""
   description = "(optional) hosts or domains to bypass the proxy for fleet traffic"
 }
-
