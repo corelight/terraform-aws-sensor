@@ -8,20 +8,14 @@ variable "corelight_sensor_ami_id" {
   type        = string
 }
 
-variable "kms_key_id" {
-  description = "The KMS key ID to be used for EBS volume encryption for the auto-scale group instances"
-  type        = string
-  default     = null
+variable "monitoring_subnet_ids" {
+  description = "List of subnet IDs where monitor traffic will be available, one per availability zone"
+  type        = list(string)
 }
 
-variable "monitoring_subnet_id" {
-  description = "The ID of the subnet where monitor traffic will be available"
-  type        = string
-}
-
-variable "management_subnet_id" {
-  description = "The ID of the subnet used to SSH / manage Corelight sensors"
-  type        = string
+variable "management_subnet_ids" {
+  description = "List of subnet IDs used to SSH / manage Corelight sensors, one per availability zone"
+  type        = list(string)
 }
 
 variable "aws_key_pair_name" {
@@ -54,6 +48,12 @@ variable "fleet_url" {
 variable "fleet_server_sslname" {
   type        = string
   description = "SSL hostname for the fleet server"
+}
+
+variable "kms_key_id" {
+  description = "The KMS key ID to be used for EBS volume encryption for the auto-scale group instances"
+  type        = string
+  default     = null
 }
 
 variable "license_key" {
@@ -206,4 +206,3 @@ variable "fleet_no_proxy" {
   default     = ""
   description = "(optional) hosts or domains to bypass the proxy for fleet traffic"
 }
-
