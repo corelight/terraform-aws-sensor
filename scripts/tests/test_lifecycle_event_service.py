@@ -17,7 +17,7 @@ event = Ec2LifecycleHookEvent(
     lifecycle_action_token="87654321-4321-4321-4321-210987654321"
 )
 
-cfg = EnvironmentConfig("foo", "bar")
+cfg = EnvironmentConfig({"us-east-1a": "subnet-foo", "us-east-1b": "subnet-bar"}, "sg-12345")
 aws_client = AwsClient("foo", "bar")
 
 
@@ -90,6 +90,7 @@ def test_process_event_should_raise_exception_on_nic_creation_client_error(mocke
     )
 
     svc = LifecycleEventService(cfg, aws_client)
+    svc.instance_data = {"Placement": {"AvailabilityZone": "us-east-1a"}}
 
     with pytest.raises(botocore.exceptions.ClientError):
         svc.process_event(event)
@@ -108,8 +109,11 @@ def test_process_event_should_raise_exception_and_delete_nic_if_attachment_fails
 
     delete_nic_mocker = mocker.patch.object(aws_client, "delete_interface", return_value=None)
 
+    svc = LifecycleEventService(cfg, aws_client)
+    svc.instance_data = {"Placement": {"AvailabilityZone": "us-east-1a"}}
+
     with pytest.raises(botocore.exceptions.ClientError):
-        LifecycleEventService(cfg, aws_client).process_event(event)
+        svc.process_event(event)
     assert create_nic_mocker.call_count == 1 and \
            attach_interface_mocker.call_count == 1 and \
            delete_nic_mocker.call_count == 1
@@ -133,8 +137,11 @@ def test_process_event_should_raise_exception_and_delete_nic_if_attachment_modif
 
     delete_nic_mocker = mocker.patch.object(aws_client, "delete_interface", return_value=None)
 
+    svc = LifecycleEventService(cfg, aws_client)
+    svc.instance_data = {"Placement": {"AvailabilityZone": "us-east-1a"}}
+
     with pytest.raises(botocore.exceptions.ClientError):
-        LifecycleEventService(cfg, aws_client).process_event(event)
+        svc.process_event(event)
 
     assert create_nic_mocker.call_count == 1 and \
         attach_mocker.call_count == 1 and \

@@ -1,7 +1,7 @@
 resource "aws_lb" "sensor_lb" {
   name                             = var.sensor_asg_load_balancer_name
   load_balancer_type               = "gateway"
-  subnets                          = [data.aws_subnet.monitoring_subnet.id]
+  subnets                          = [for subnet in data.aws_subnet.monitoring_subnets : subnet.id]
   enable_cross_zone_load_balancing = true
 }
 

@@ -1,4 +1,5 @@
 import os
+import json
 from enum import Enum
 
 import boto3
@@ -9,7 +10,7 @@ import logging
 
 @dataclass
 class EnvironmentConfig:
-    subnet_id: str
+    subnet_map: dict  # Maps AZ to subnet ID
     security_group_id: str
 
 
@@ -38,7 +39,7 @@ class LifecycleActionResult(Enum):
 
 
 class EnvironmentVariables(Enum):
-    TARGET_SUBNET = "TARGET_SUBNET"
+    TARGET_SUBNETS = "TARGET_SUBNETS"
     TARGET_SECURITY_GROUP_ID = "TARGET_SECURITY_GROUP_ID"
 
 
@@ -135,7 +136,18 @@ class LifecycleEventService:
         self.instance_data = {}
 
     def process_event(self, event: Ec2LifecycleHookEvent):
-        network_interface_id = self.aws_client.create_interface(self.config.subnet_id, self.config.security_group_id)
+        # Get the AZ of the instance
+        instance_az = self.instance_data['Placement']['AvailabilityZone']
+        logging.info(f"Instance {event.instance_id} is in AZ {instance_az}")
+
+        # Find the matching management subnet for this AZ
+        if instance_az not in self.config.subnet_map:
+            raise Exception(f"No management subnet configured for AZ {instance_az}. Available AZs: {list(self.config.subnet_map.keys())}")
+
+        target_subnet_id = self.config.subnet_map[instance_az]
+        logging.info(f"Using management subnet {target_subnet_id} for AZ {instance_az}")
+
+        network_interface_id = self.aws_client.create_interface(target_subnet_id, self.config.security_group_id)
         try:
             attachment_resp = self.aws_client.attach_interface(network_interface_id, event.instance_id)
             self.aws_client.modify_attachment_to_delete_on_termination(attachment_resp["AttachmentId"], network_interface_id)
@@ -179,21 +191,29 @@ def lambda_handler(event, context):
     parsed_event: Ec2LifecycleHookEvent = from_aws_event_bridge_json(event)
 
     try:
+        if not lifecycle_event_svc.should_process_event(parsed_event):
+            logging.error("Event validation failed, abandoning lifecycle action")
+            lifecycle_event_svc.complete_lifecycle_action(parsed_event, LifecycleActionResult.ABANDON)
+            return
+
         lifecycle_event_svc.process_event(parsed_event)
         lifecycle_event_svc.complete_lifecycle_action(parsed_event, LifecycleActionResult.CONTINUE)
         logging.info("Lifecycle action completed successfully")
     except Exception as e:
-        logging.info(f"failed to process event: {e}")
-        lifecycle_event_svc.complete_lifecycle_action(parsed_event, LifecycleActionResult.ABANDON)
+        logging.error(f"failed to process event: {e}")
+        try:
+            lifecycle_event_svc.complete_lifecycle_action(parsed_event, LifecycleActionResult.ABANDON)
+        except Exception as complete_error:
+            logging.error(f"Failed to complete lifecycle action with ABANDON: {complete_error}")
         raise e
 
 
 def parse_environment() -> EnvironmentConfig:
-    subnet = os.getenv(EnvironmentVariables.TARGET_SUBNET.value, "")
+    subnets_json = os.getenv(EnvironmentVariables.TARGET_SUBNETS.value, "")
     security_group_id = os.getenv(EnvironmentVariables.TARGET_SECURITY_GROUP_ID.value, "")
 
-    if subnet == "":
-        msg = f"environment variable ${EnvironmentVariables.TARGET_SUBNET.value} is not defined"
+    if subnets_json == "":
+        msg = f"environment variable ${EnvironmentVariables.TARGET_SUBNETS.value} is not defined"
         logging.error(msg)
         raise Exception(msg)
 
@@ -202,4 +222,11 @@ def parse_environment() -> EnvironmentConfig:
         logging.error(msg)
         raise Exception(msg)
 
-    return EnvironmentConfig(subnet_id=subnet, security_group_id=security_group_id)
+    try:
+        subnet_map = json.loads(subnets_json)
+    except json.JSONDecodeError as e:
+        msg = f"Failed to parse TARGET_SUBNETS as JSON: {e}"
+        logging.error(msg)
+        raise Exception(msg)
+
+    return EnvironmentConfig(subnet_map=subnet_map, security_group_id=security_group_id)
