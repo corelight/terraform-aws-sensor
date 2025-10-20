@@ -15,10 +15,10 @@ resource "aws_launch_template" "sensor_launch_template" {
   }
 
   block_device_mappings {
-    device_name = '/dev/xvda'
+    device_name = var.sensor_launch_template_volume_name
 
     ebs {
-      volume_size           = 100
+      volume_size           = var.sensor_launch_template_volume_size
       volume_type           = "gp3"
       encrypted             = var.kms_key_id == "" ? false : true
       kms_key_id            = var.kms_key_id == "" ? null : var.kms_key_id

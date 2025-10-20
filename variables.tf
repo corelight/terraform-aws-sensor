@@ -117,6 +117,18 @@ variable "sensor_launch_template_instance_type" {
   default     = "c5.2xlarge"
 }
 
+variable "sensor_launch_template_volume_name" {
+  description = "The name of the volume for the sensor launch template"
+  type        = string
+  default     = "/dev/xvda"
+}
+
+variable "sensor_launch_template_volume_size" {
+  description = "The size of the volume for the sensor launch template"
+  type        = number
+  default     = 100
+}
+
 variable "lb_health_check_target_group_name" {
   description = "The name of the health check target group which determines if the sensor in the ASG comes up and is ready to accept traffic"
   type        = string
