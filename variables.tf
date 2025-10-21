@@ -126,7 +126,7 @@ variable "sensor_launch_template_volume_name" {
 variable "sensor_launch_template_volume_size" {
   description = "The size of the volume for the sensor launch template"
   type        = number
-  default     = 100
+  default     = 500
 }
 
 variable "lb_health_check_target_group_name" {
