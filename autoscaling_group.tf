@@ -24,6 +24,21 @@ resource "aws_autoscaling_group" "sensor_asg" {
     heartbeat_timeout    = 300
   }
 
+  tag {
+    key                 = "Name"
+    value               = "${var.sensor_asg_name}-sensor"
+    propagate_at_launch = true
+  }
+
+  dynamic "tag" {
+    for_each = var.tags
+    content {
+      key                 = tag.key
+      value               = tag.value
+      propagate_at_launch = true
+    }
+  }
+
   depends_on = [
     aws_lambda_function.auto_scaling_lambda,
     aws_cloudwatch_event_rule.asg_lifecycle_rule,
