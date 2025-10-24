@@ -17,4 +17,4 @@ jobs:
       - name: Bump version and push tag
         uses: anothrNick/github-tag-action@1.75.0
         env:
-          DRY_RUN: true
+          TAG_PREFIX: 'v'
