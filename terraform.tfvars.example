@@ -1,0 +1,93 @@
+# Terraform Variables for Corelight AWS Sensor Deployment
+# Copy this file to terraform.tfvars and fill in your values
+
+# ===========================
+# Required Variables
+# ===========================
+
+# VPC Configuration
+vpc_id = "vpc-xxxxxxxxx"  # The VPC ID where the sensor will be deployed
+
+# AMI Configuration
+corelight_sensor_ami_id = "ami-xxxxxxxxx"  # Request access from your Corelight Account Executive
+
+# SSH Key Pair
+aws_key_pair_name = "your-key-pair-name"  # Existing AWS key pair for SSH access
+
+# Network Configuration - Multi-AZ Support
+# Provide one subnet per availability zone (must be in same order)
+monitoring_subnet_ids = [
+  "subnet-xxxxxxxxx",  # Monitoring subnet in AZ 1 (e.g., us-east-1a)
+  "subnet-xxxxxxxxx",  # Monitoring subnet in AZ 2 (e.g., us-east-1b)
+]
+
+management_subnet_ids = [
+  "subnet-xxxxxxxxx",  # Management subnet in AZ 1 (e.g., us-east-1a)
+  "subnet-xxxxxxxxx",  # Management subnet in AZ 2 (e.g., us-east-1b)
+]
+
+# Sensor Configuration
+community_string = "your-secure-api-password"  # API password for sensor management
+
+# Fleet Configuration (Corelight Cloud)
+fleet_token          = "your-fleet-pairing-token"      # From Fleet UI
+fleet_url            = "https://fleet.example.com"     # Fleet instance URL
+fleet_server_sslname = "fleet.example.com"             # Fleet SSL hostname
+
+# IAM Role (from lambda module)
+asg_lambda_iam_role_arn = "arn:aws:iam::123456789012:role/corelight-lambda-role"
+
+# ===========================
+# Optional Variables
+# ===========================
+
+# License Key (optional if using Fleet)
+# license_key = "your-corelight-license-key"
+
+# KMS Encryption (optional)
+# kms_key_id = "arn:aws:kms:us-east-1:123456789012:key/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+# Instance Profile (optional - for enrichment features)
+# instance_profile_arn = "arn:aws:iam::123456789012:instance-profile/corelight-sensor"
+
+# Proxy Settings (optional)
+# fleet_http_proxy  = "http://proxy.example.com:8080"
+# fleet_https_proxy = "https://proxy.example.com:8443"
+# fleet_no_proxy    = "169.254.169.254,localhost"
+
+# ===========================
+# Customization Options
+# ===========================
+
+# ASG Configuration
+# sensor_asg_name = "my-corelight-sensor"
+
+# Auto-Scaling CPU Thresholds (percentage)
+# asg_cpu_scale_out_threshold = 70  # Scale out when CPU > 70%
+# asg_cpu_scale_in_threshold  = 40  # Scale in when CPU < 40%
+
+# Instance Configuration
+# sensor_launch_template_instance_type = "c5.2xlarge"  # Default instance type
+# sensor_launch_template_volume_size   = 500            # Root volume size in GB
+
+# Load Balancer
+# sensor_asg_load_balancer_name = "my-corelight-lb"
+
+# CloudWatch Log Retention
+# cloudwatch_log_group_retention = 3  # Days
+
+# Network Interface Names
+# monitoring_nic_name = "corelight-mon-nic"
+# management_nic_name = "corelight-mgmt-nic"
+
+# Security Group Names
+# sensor_monitoring_security_group_name = "corelight-sensor-monitoring"
+# sensor_management_security_group_name = "corelight-sensor-management"
+
+# Tags
+# tags = {
+#   Environment = "production"
+#   ManagedBy   = "terraform"
+#   Team        = "security"
+#   CostCenter  = "12345"
+# }

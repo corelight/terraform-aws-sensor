@@ -1,0 +1,90 @@
+---
+name: Terraform Unit Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.8.2"
+
+      - name: Terraform Init
+        run: terraform init -backend=false
+
+      - name: Run All Tests
+        run: task test:verbose
+
+      - name: Test Summary
+        if: always()
+        run: |
+          echo "## Terraform Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Tests completed" >> $GITHUB_STEP_SUMMARY
+
+  test-suites:
+    name: Run Test Suites
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        test-suite:
+          - name: "Variable Validation"
+            filter: "tests/unit_validation.tftest.hcl"
+          - name: "Resource Configuration"
+            filter: "tests/unit_resources.tftest.hcl"
+          - name: "Outputs"
+            filter: "tests/unit_outputs.tftest.hcl"
+          - name: "Multi-AZ"
+            filter: "tests/unit_multi_az.tftest.hcl"
+          - name: "Defaults"
+            filter: "tests/unit_defaults.tftest.hcl"
+          - name: "Integration"
+            filter: "tests/integration.tftest.hcl"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.8.2"
+
+      - name: Terraform Init
+        run: terraform init -backend=false
+
+      - name: Run ${{ matrix.test-suite.name }} Tests
+        run: terraform test -filter=${{ matrix.test-suite.filter }} -verbose
+
+      - name: Test Suite Summary
+        if: always()
+        run: |
+          echo "## ${{ matrix.test-suite.name }} Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ $? -eq 0 ]; then
+            echo "✅ ${{ matrix.test-suite.name }} tests passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ ${{ matrix.test-suite.name }} tests failed" >> $GITHUB_STEP_SUMMARY
+          fi

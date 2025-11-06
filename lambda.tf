@@ -5,7 +5,7 @@ locals {
 resource "aws_lambda_function" "auto_scaling_lambda" {
   function_name = var.lambda_function_name
   role          = var.asg_lambda_iam_role_arn
-  filename      = "lambda_payload.zip"
+  filename      = data.archive_file.aws_lambda_code.output_path
   handler       = "corelight_sensor_asg_nic_manager.lambda_handler"
   timeout       = 30
   runtime       = "python3.12"
@@ -18,8 +18,6 @@ resource "aws_lambda_function" "auto_scaling_lambda" {
       TARGET_SECURITY_GROUP_ID = aws_security_group.management.id
     }
   }
-
-  tags = var.tags
 
   depends_on = [
     data.archive_file.aws_lambda_code
@@ -42,15 +40,11 @@ resource "aws_cloudwatch_event_rule" "asg_lifecycle_rule" {
       "LifecycleHookName" : [var.asg_lifecycle_hook_name]
     }
   })
-
-  tags = var.tags
 }
 
 resource "aws_cloudwatch_log_group" "log_group" {
   name              = "${var.cloudwatch_log_group_prefix}/${aws_lambda_function.auto_scaling_lambda.function_name}"
   retention_in_days = var.cloudwatch_log_group_retention
-
-  tags = var.tags
 }
 
 resource "aws_cloudwatch_event_target" "ec2_state_change_rule_lambda_target" {

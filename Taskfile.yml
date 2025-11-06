@@ -16,3 +16,68 @@ tasks:
     desc: Scan Terraform files with Trivy
     cmds:
       - trivy fs --config scripts/trivy/trivy.yml .
+
+  test:
+    desc: Run all Terraform unit and integration tests
+    cmds:
+      - terraform init -backend=false
+      - terraform test
+
+  test:verbose:
+    desc: Run all Terraform tests with verbose output
+    cmds:
+      - terraform init -backend=false
+      - terraform test -verbose
+
+  test:validation:
+    desc: Run variable validation tests only
+    cmds:
+      - terraform init -backend=false
+      - terraform test -filter=tests/unit_validation.tftest.hcl
+
+  test:resources:
+    desc: Run resource configuration tests only
+    cmds:
+      - terraform init -backend=false
+      - terraform test -filter=tests/unit_resources.tftest.hcl
+
+  test:outputs:
+    desc: Run output tests only
+    cmds:
+      - terraform init -backend=false
+      - terraform test -filter=tests/unit_outputs.tftest.hcl
+
+  test:multi-az:
+    desc: Run multi-AZ functionality tests only
+    cmds:
+      - terraform init -backend=false
+      - terraform test -filter=tests/unit_multi_az.tftest.hcl
+
+  test:defaults:
+    desc: Run default values tests only
+    cmds:
+      - terraform init -backend=false
+      - terraform test -filter=tests/unit_defaults.tftest.hcl
+
+  test:integration:
+    desc: Run integration tests only
+    cmds:
+      - terraform init -backend=false
+      - terraform test -filter=tests/integration.tftest.hcl
+
+  validate:
+    desc: Run format check, validation, and tests
+    cmds:
+      - task: fmt:check
+      - terraform init -backend=false
+      - terraform validate
+      - task: test
+
+  ci:
+    desc: Run all CI checks (format, validate, test, security scan)
+    cmds:
+      - task: fmt:check
+      - terraform init -backend=false
+      - terraform validate
+      - task: test
+      - task: trivy:scan

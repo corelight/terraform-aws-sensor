@@ -3,7 +3,7 @@ resource "aws_security_group" "monitoring" {
   description = var.sensor_monitoring_security_group_description
   vpc_id      = data.aws_vpc.provided.id
 
-  tags = merge({ Name : var.sensor_monitoring_security_group_name }, var.tags)
+  tags = { Name : var.sensor_monitoring_security_group_name }
 }
 
 resource "aws_security_group_rule" "geneve_mirror_traffic_rule" {
@@ -41,7 +41,7 @@ resource "aws_security_group" "management" {
   description = var.sensor_management_security_group_description
   vpc_id      = data.aws_vpc.provided.id
 
-  tags = merge({ Name : var.sensor_management_security_group_name }, var.tags)
+  tags = { Name : var.sensor_management_security_group_name }
 }
 
 resource "aws_security_group_rule" "management_network_egress_all" {

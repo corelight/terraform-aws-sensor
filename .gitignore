@@ -6,3 +6,4 @@
 **tfplan**
 .coverage
 test-results/
+lambda_payload.zip
