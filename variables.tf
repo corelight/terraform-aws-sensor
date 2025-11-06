@@ -72,11 +72,6 @@ variable "license_key" {
   sensitive   = true
   type        = string
   default     = ""
-
-  validation {
-    condition     = var.license_key != "" || var.fleet_url != ""
-    error_message = "Either license_key must be provided or fleet_url must be configured."
-  }
 }
 
 variable "asg_lambda_iam_role_arn" {
@@ -122,11 +117,6 @@ variable "asg_cpu_scale_in_threshold" {
   validation {
     condition     = var.asg_cpu_scale_in_threshold > 0 && var.asg_cpu_scale_in_threshold <= 100
     error_message = "CPU scale-in threshold must be between 1 and 100."
-  }
-
-  validation {
-    condition     = var.asg_cpu_scale_in_threshold < var.asg_cpu_scale_out_threshold
-    error_message = "CPU scale-in threshold must be lower than scale-out threshold to prevent scaling thrashing."
   }
 }
 

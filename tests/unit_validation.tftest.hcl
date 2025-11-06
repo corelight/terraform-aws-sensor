@@ -198,9 +198,9 @@ run "test_cpu_threshold_validation_invalid" {
     asg_cpu_scale_in_threshold  = 60
   }
 
-  # Should fail when scale-in >= scale-out
+  # Should fail when scale-in >= scale-out (cross-variable validation in validation.tf)
   expect_failures = [
-    var.asg_cpu_scale_in_threshold,
+    terraform_data.validate_cpu_thresholds,
   ]
 }
 
