@@ -1,5 +1,5 @@
 module "sensor_config" {
-  source = "github.com/corelight/terraform-config-sensor?ref=v1.0.0"
+  source = "github.com/corelight/terraform-config-sensor?ref=28.4.0-1"
 
   sensor_license                   = var.license_key
   fleet_community_string           = var.community_string
@@ -13,4 +13,6 @@ module "sensor_config" {
   sensor_monitoring_interface_name = "eth0"
   base64_encode_config             = true
   sensor_health_check_http_port    = "41080"
+  fedramp_mode_enabled             = var.fedramp_mode_enabled
+  prometheus_enabled               = var.prometheus_enabled
 }
