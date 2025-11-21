@@ -20,16 +20,18 @@ resource "aws_launch_template" "sensor_launch_template" {
     ebs {
       volume_size           = var.sensor_launch_template_volume_size
       volume_type           = "gp3"
-      encrypted             = var.kms_key_id == "" ? false : true
+      encrypted             = true
       kms_key_id            = var.kms_key_id == "" ? null : var.kms_key_id
       delete_on_termination = true
     }
   }
 
   network_interfaces {
-    device_index          = 0
-    security_groups       = [aws_security_group.monitoring.id]
-    delete_on_termination = true
+    device_index                = 0
+    security_groups             = [aws_security_group.monitoring.id]
+    delete_on_termination       = true
+    associate_public_ip_address = false
+
   }
 
   user_data = module.sensor_config.cloudinit_config.rendered

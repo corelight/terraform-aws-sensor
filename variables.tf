@@ -23,10 +23,10 @@ variable "aws_key_pair_name" {
   type        = string
 }
 
-variable "availability_zones" {
+/* variable "availability_zones" {
   description = "The availability zone the auto scale group and load balancer will use"
   type        = list(string)
-}
+} */
 
 variable "community_string" {
   description = "the community string (api string) often times referenced by Fleet"
@@ -92,7 +92,7 @@ variable "sensor_asg_name" {
   default     = "corelight-sensor"
 }
 
-variable "monitoring_nic_name" {
+/* variable "monitoring_nic_name" {
   description = "The name of the Network Interface used for monitoring GENEVE traffic to the sensor"
   type        = string
   default     = "corelight-mon-nic"
@@ -102,7 +102,7 @@ variable "management_nic_name" {
   description = "The name of the Network Interface used for management of the sensor - SSH/HTTPS"
   type        = string
   default     = "corelight-mgmt-nic"
-}
+} */
 
 
 variable "sensor_launch_template_name" {
@@ -217,4 +217,34 @@ variable "fleet_no_proxy" {
   type        = string
   default     = ""
   description = "(optional) hosts or domains to bypass the proxy for fleet traffic"
+}
+
+variable "min_instances" {
+  description = "Minimum number of instances in the auto-scaling group"
+  type        = number
+  default     = 1
+}
+
+variable "max_instances" {
+  description = "Maximum number of instances in the auto-scaling group"
+  type        = number
+  default     = 1
+}
+
+variable "desired_instances" {
+  description = "Desired number of instances in the auto-scaling group"
+  type        = number
+  default     = 1
+}
+
+variable "warm_instances" {
+  description = "Minimum number of warm instances in the auto-scaling group"
+  type        = number
+  default     = 0
+}
+
+variable "sensor_health_check_http_port" {
+  type        = string
+  default     = "41080"
+  description = "the port number for the HTTP health check request"
 }
