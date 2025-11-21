@@ -228,7 +228,7 @@ variable "min_instances" {
 variable "max_instances" {
   description = "Maximum number of instances in the auto-scaling group"
   type        = number
-  default     = 1
+  default     = 5
 }
 
 variable "desired_instances" {
