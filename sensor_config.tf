@@ -1,5 +1,5 @@
 module "sensor_config" {
-  source = "github.com/corelight/terraform-config-sensor?ref=v1.0.0"
+  source = "github.com/corelight/terraform-config-sensor"
 
   sensor_license                   = var.license_key
   fleet_community_string           = var.community_string
