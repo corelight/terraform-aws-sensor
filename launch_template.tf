@@ -14,6 +14,12 @@ resource "aws_launch_template" "sensor_launch_template" {
     }
   }
 
+  # CKV_AWS_79: Enforce IMDSv2 (Instance Metadata Service Version 2)
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens   = "required"
+  }
+
   block_device_mappings {
     device_name = var.sensor_launch_template_volume_name
 
