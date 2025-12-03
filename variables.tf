@@ -23,11 +23,6 @@ variable "aws_key_pair_name" {
   type        = string
 }
 
-variable "availability_zones" {
-  description = "The availability zone the auto scale group and load balancer will use"
-  type        = list(string)
-}
-
 variable "community_string" {
   description = "the community string (api string) often times referenced by Fleet"
   type        = string
@@ -92,18 +87,6 @@ variable "sensor_asg_name" {
   default     = "corelight-sensor"
 }
 
-variable "monitoring_nic_name" {
-  description = "The name of the Network Interface used for monitoring GENEVE traffic to the sensor"
-  type        = string
-  default     = "corelight-mon-nic"
-}
-
-variable "management_nic_name" {
-  description = "The name of the Network Interface used for management of the sensor - SSH/HTTPS"
-  type        = string
-  default     = "corelight-mgmt-nic"
-}
-
 
 variable "sensor_launch_template_name" {
   description = "The name of the launch template used by the auto-scale group"
@@ -127,6 +110,12 @@ variable "sensor_launch_template_volume_size" {
   description = "The size of the volume for the sensor launch template"
   type        = number
   default     = 500
+}
+
+variable "ebs_iops" {
+  type        = number
+  default     = 16000
+  description = "The gp3 IOPS given to the sensor volume"
 }
 
 variable "lb_health_check_target_group_name" {
@@ -217,4 +206,16 @@ variable "fleet_no_proxy" {
   type        = string
   default     = ""
   description = "(optional) hosts or domains to bypass the proxy for fleet traffic"
+}
+
+variable "prometheus_enabled" {
+  type        = bool
+  default     = false
+  description = "(optional) enable Prometheus metrics"
+}
+
+variable "fedramp_mode_enabled" {
+  type        = bool
+  default     = false
+  description = "(optional) enable Fedramp mode"
 }
