@@ -1,3 +1,5 @@
+data "aws_partition" "current" {}
+
 data "aws_iam_policy_document" "lambda_nic_manager_policy" {
   statement {
     effect = "Allow"
@@ -38,7 +40,7 @@ data "aws_iam_policy_document" "lambda_nic_manager_policy" {
       "ec2:ModifyNetworkInterfaceAttribute",
     ]
     resources = [
-      "arn:aws:ec2:*:*:instance/*"
+      "arn:${data.aws_partition.current.partition}:ec2:*:*:instance/*"
     ]
     condition {
       test     = "StringEquals"
@@ -56,7 +58,7 @@ data "aws_iam_policy_document" "lambda_nic_manager_policy" {
       "ec2:ModifyNetworkInterfaceAttribute",
     ]
     resources = [
-      "arn:aws:ec2:*:*:network-interface/*"
+      "arn:${data.aws_partition.current.partition}:ec2:*:*:network-interface/*"
     ]
     condition {
       test     = "StringEquals"
@@ -75,7 +77,7 @@ data "aws_iam_policy_document" "lambda_nic_manager_policy" {
       var.subnet_arns,
       [
         var.security_group_arn,
-        "arn:aws:ec2:*:*:network-interface/*"
+        "arn:${data.aws_partition.current.partition}:ec2:*:*:network-interface/*"
       ]
     )
   }
@@ -109,5 +111,3 @@ resource "aws_iam_role_policy_attachment" "lambda_attach" {
   policy_arn = aws_iam_policy.lambda_policy.arn
   role       = aws_iam_role.lambda_nic_manager_role.name
 }
-
-
