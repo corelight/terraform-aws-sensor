@@ -81,6 +81,12 @@ variable "sensor_asg_scale_in_policy_name" {
   default     = "corelight-sensor-asg-scale-in-policy"
 }
 
+variable "sensor_health_check_http_port" {
+  description = "The port used for health checks on the sensor"
+  type        = number
+  default     = 41080
+}
+
 variable "sensor_asg_load_balancer_name" {
   description = "The name of the load balancer which fronts the auto-scale group"
   type        = string
