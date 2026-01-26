@@ -75,3 +75,33 @@ resource "awscc_cloudwatch_alarm" "sensor_asg_high_cpu_alarm" {
   ]
   metric_name = "CPUUtilization"
 }
+
+resource "aws_autoscaling_policy" "sensor_scale_in_policy" {
+  name                   = var.sensor_asg_scale_in_policy_name
+  autoscaling_group_name = aws_autoscaling_group.sensor_asg.name
+
+  policy_type     = "StepScaling"
+  adjustment_type = "ChangeInCapacity"
+  step_adjustment {
+    metric_interval_upper_bound = 0
+    scaling_adjustment          = -1
+  }
+}
+
+resource "awscc_cloudwatch_alarm" "sensor_asg_low_cpu_alarm" {
+  statistic           = "Average"
+  threshold           = 30
+  alarm_description   = "Scale in if CPU < 30% for 5 minutes"
+  evaluation_periods  = 5
+  period              = 60
+  comparison_operator = "LessThanThreshold"
+  namespace           = "AWS/EC2"
+  alarm_actions       = [aws_autoscaling_policy.sensor_scale_in_policy.arn]
+  dimensions = [
+    {
+      name  = "AutoScalingGroupName"
+      value = aws_autoscaling_group.sensor_asg.name
+    }
+  ]
+  metric_name = "CPUUtilization"
+}

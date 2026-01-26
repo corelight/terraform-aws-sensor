@@ -75,6 +75,12 @@ variable "sensor_asg_auto_scale_policy_name" {
   default     = "corelight-sensor-asg-policy"
 }
 
+variable "sensor_asg_scale_in_policy_name" {
+  description = "The name of the auto-scale group scale in policy"
+  type        = string
+  default     = "corelight-sensor-asg-scale-in-policy"
+}
+
 variable "sensor_asg_load_balancer_name" {
   description = "The name of the load balancer which fronts the auto-scale group"
   type        = string
