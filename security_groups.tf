@@ -18,8 +18,8 @@ resource "aws_security_group_rule" "geneve_mirror_traffic_rule" {
 
 resource "aws_security_group_rule" "monitor_traffic_rule" {
   type              = "ingress"
-  from_port         = 41080
-  to_port           = 41080
+  from_port         = var.sensor_health_check_http_port
+  to_port           = var.sensor_health_check_http_port
   protocol          = "tcp"
   security_group_id = aws_security_group.monitoring.id
   description       = "GWLB Health Check Port"
