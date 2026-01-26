@@ -18,8 +18,8 @@ variable "security_group_arn" {
   type        = string
 }
 
-variable "lambda_role_arn" {
-  description = "ARN of the ENI management lambda role"
+variable "lambda_role_name" {
+  description = "Name of the ENI management lambda role"
   type        = string
   default     = "corelight-asg-sensor-nic-manager-lambda-role"
 }
