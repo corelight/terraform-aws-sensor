@@ -28,7 +28,7 @@ resource "aws_launch_template" "sensor_launch_template" {
       volume_size           = var.sensor_launch_template_volume_size
       volume_type           = "gp3"
       iops                  = var.ebs_iops
-      encrypted             = var.kms_key_id == "" ? false : true
+      encrypted             = true
       kms_key_id            = var.kms_key_id == "" ? null : var.kms_key_id
       delete_on_termination = true
     }
