@@ -11,8 +11,8 @@ resource "aws_autoscaling_group" "sensor_asg" {
 
   vpc_zone_identifier       = var.monitoring_subnet_ids
   target_group_arns         = [aws_lb_target_group.health_check.arn]
-  health_check_type         = "EC2"
-  health_check_grace_period = 300
+  health_check_type         = "ELB"
+  health_check_grace_period = 900
   termination_policies      = ["OldestInstance"]
   protect_from_scale_in     = false
   wait_for_capacity_timeout = 0
