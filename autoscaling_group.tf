@@ -13,6 +13,7 @@ resource "aws_autoscaling_group" "sensor_asg" {
   target_group_arns         = [aws_lb_target_group.health_check.arn]
   health_check_type         = "ELB"
   health_check_grace_period = 900
+  default_instance_warmup   = 900
   termination_policies      = ["OldestInstance"]
   protect_from_scale_in     = false
   wait_for_capacity_timeout = 0
