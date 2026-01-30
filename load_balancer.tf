@@ -24,7 +24,7 @@ resource "aws_lb_target_group" "health_check" {
     enabled             = true
     protocol            = "HTTP"
     path                = "/api/system/healthcheck"
-    port                = 41080
+    port                = var.sensor_health_check_http_port
     interval            = 60
     healthy_threshold   = 2
     unhealthy_threshold = 10

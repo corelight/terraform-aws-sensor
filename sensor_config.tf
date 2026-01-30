@@ -12,7 +12,7 @@ module "sensor_config" {
   sensor_management_interface_name = "eth1"
   sensor_monitoring_interface_name = "eth0"
   base64_encode_config             = true
-  sensor_health_check_http_port    = "41080"
+  sensor_health_check_http_port    = var.sensor_health_check_http_port
   fedramp_mode_enabled             = var.fedramp_mode_enabled
   prometheus_enabled               = var.prometheus_enabled
 }
