@@ -102,7 +102,7 @@ data "aws_iam_policy_document" "lambda_assume_role_policy" {
 }
 
 resource "aws_iam_role" "lambda_nic_manager_role" {
-  name               = var.lambda_role_arn
+  name               = var.lambda_role_name
   assume_role_policy = data.aws_iam_policy_document.lambda_assume_role_policy.json
   tags               = var.tags
 }
