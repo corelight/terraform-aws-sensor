@@ -186,7 +186,7 @@ variable "asg_lifecycle_hook_name" {
 
 variable "tags" {
   description = "(optional) Any tags that should be applied to resources deployed by the module"
-  type        = object({})
+  type        = map(any)
   default     = {}
 }
 
