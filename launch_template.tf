@@ -43,4 +43,9 @@ resource "aws_launch_template" "sensor_launch_template" {
   user_data = module.sensor_config.cloudinit_config.rendered
 
   tags = var.tags
+
+  tag_specifications {
+    resource_type = "instance"
+    tags          = var.tags
+  }
 }
