@@ -87,6 +87,12 @@ variable "sensor_health_check_http_port" {
   default     = 41080
 }
 
+variable "healthcheck_path" {
+  description = "The path for the health check"
+  type        = string
+  default     = "/api/system/healthcheck"
+}
+
 variable "sensor_asg_load_balancer_name" {
   description = "The name of the load balancer which fronts the auto-scale group"
   type        = string
