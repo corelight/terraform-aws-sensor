@@ -6,5 +6,13 @@ terraform {
       source  = "hashicorp/aws"
       version = ">= 5"
     }
+    awscc = {
+      source  = "hashicorp/awscc"
+      version = ">= 1"
+    }
+    archive = {
+      source  = "hashicorp/archive"
+      version = ">= 2"
+    }
   }
 }
