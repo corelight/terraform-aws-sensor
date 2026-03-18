@@ -49,3 +49,11 @@ output "management_security_group_arn" {
 output "cloudwatch_log_group_arn" {
   value = aws_cloudwatch_log_group.log_group.arn
 }
+
+output "vpc_endpoint_service_name" {
+  value = aws_vpc_endpoint_service.gwlb_service.service_name
+}
+
+output "vpc_endpoint_service_id" {
+  value = aws_vpc_endpoint_service.gwlb_service.id
+}

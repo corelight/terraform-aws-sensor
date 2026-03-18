@@ -237,3 +237,9 @@ variable "fedramp_mode_enabled" {
   default     = false
   description = "(optional) enable Fedramp mode"
 }
+
+variable "vpc_endpoint_service_acceptance_required" {
+  type        = bool
+  default     = false
+  description = "(optional) Whether to require acceptance of the VPC endpoint"
+}

@@ -30,3 +30,15 @@ resource "aws_lb_target_group" "health_check" {
     unhealthy_threshold = 10
   }
 }
+
+resource "aws_vpc_endpoint_service" "gwlb_service" {
+  acceptance_required        = var.vpc_endpoint_service_acceptance_required
+  gateway_load_balancer_arns = [aws_lb.sensor_lb.arn]
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.sensor_asg_load_balancer_name}-service"
+    },
+  )
+}
