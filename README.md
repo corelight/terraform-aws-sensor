@@ -1,3 +1,23 @@
+# ⚠️ DEPRECATED — This repository has moved
+
+> **This repository is no longer maintained and has been archived (read-only).**
+> All Corelight Terraform modules now live in the
+> **[Corelight Terraform monorepo](https://github.com/corelight/terraform)**.
+
+**New location:** [`modules/aws/sensor`](https://github.com/corelight/terraform/tree/main/modules/aws/sensor)
+
+**Update your module `source`** (replace `<version>` with a [release tag](https://github.com/corelight/terraform/releases), e.g. `v29.0.5-5`):
+
+```terraform
+module "sensor" {
+  source = "github.com/corelight/terraform//modules/aws/sensor?ref=<version>"
+}
+```
+
+See the [monorepo README](https://github.com/corelight/terraform#readme) for the full module list.
+
+---
+
 # terraform-aws-sensor
 
 Terraform for Corelight's AWS Cloud Sensor Deployment.
